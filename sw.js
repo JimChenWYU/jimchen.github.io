@@ -18,6 +18,7 @@ const ignoreFetch = [
   /http?:\/\/fonts.gstatic.com\//,
   /http?:\/\/a.disquscdn.com\//,
   /http?:\/\/disqus.com\//,
+  
 ];
 
 
