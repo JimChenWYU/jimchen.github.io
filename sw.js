@@ -10,12 +10,14 @@ const offlineResources = [
 ];
 
 const ignoreFetch = [
-  /http?:\/\/static.duoshuo.com\//,
-  /ws?:\/\/ws.duoshuo.com\//,
+  // /http?:\/\/static.duoshuo.com\//,
+  // /ws?:\/\/ws.duoshuo.com\//,
+  // /http?:\/\/chenjunwu.duoshuo.com\//,
   /http?:\/\/fonts.googleapis.com\//,
   /http?:\/\/hm.baidu.com\//,
   /http?:\/\/fonts.gstatic.com\//,
-  /http?:\/\/chenjunwu.duoshuo.com\//,
+  /http?:\/\/a.disquscdn.com\//,
+  /http?:\/\/disqus.com\//,
 ];
 
 
