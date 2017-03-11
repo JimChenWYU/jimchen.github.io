@@ -1,0 +1,916 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jim_Chen 的小站" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="AngularJS中我们熟知的双向数据绑定，可是它到底怎么运作的，就和这几个概念有关，然而这几个概念很容易混淆视听，而且几个概念之间关系也很容易搞得扑朔迷离，但是看了一篇博文之后茅塞顿开，今天就来分享一下算是读后感吧。
+Let’s start from the beginning!">
+<meta property="og:type" content="article">
+<meta property="og:title" content="$watch, $apply, $digest的关系">
+<meta property="og:url" content="http://blog.chenjunwu.com/2016/08/08/$watch-$apply-$digest/index.html">
+<meta property="og:site_name" content="Jim_Chen 的小站">
+<meta property="og:description" content="AngularJS中我们熟知的双向数据绑定，可是它到底怎么运作的，就和这几个概念有关，然而这几个概念很容易混淆视听，而且几个概念之间关系也很容易搞得扑朔迷离，但是看了一篇博文之后茅塞顿开，今天就来分享一下算是读后感吧。
+Let’s start from the beginning!">
+<meta property="og:image" content="http://blog.chenjunwu.com/images/asset/2016/2016-08-08_0231.png">
+<meta property="og:image" content="http://blog.chenjunwu.com/images/asset/2016/2016-08-08_231.png">
+<meta property="og:image" content="http://blog.chenjunwu.com/images/asset/2016/2016-08-08_251.png">
+<meta property="og:image" content="http://blog.chenjunwu.com/images/asset/2016/2016-08-08_0251.png">
+<meta property="og:image" content="http://blog.chenjunwu.com/images/asset/2016/2016-08-08_532.png">
+<meta property="og:image" content="http://blog.chenjunwu.com/images/asset/2016/2016-08-08_0532.png">
+<meta property="og:image" content="http://blog.chenjunwu.com/images/asset/2016/2016-08-08_543.png">
+<meta property="og:image" content="http://blog.chenjunwu.com/images/asset/2016/2016-08-08_0532.png">
+<meta property="og:updated_time" content="2016-08-10T11:31:02.613Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="$watch, $apply, $digest的关系">
+<meta name="twitter:description" content="AngularJS中我们熟知的双向数据绑定，可是它到底怎么运作的，就和这几个概念有关，然而这几个概念很容易混淆视听，而且几个概念之间关系也很容易搞得扑朔迷离，但是看了一篇博文之后茅塞顿开，今天就来分享一下算是读后感吧。
+Let’s start from the beginning!">
+<meta name="twitter:image" content="http://blog.chenjunwu.com/images/asset/2016/2016-08-08_0231.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> $watch, $apply, $digest的关系 | Jim_Chen 的小站 </title>
+  <!-- 自定义引入Service Worker -->
+  <script>
+    (function () {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js');
+      }
+    }())
+  </script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?847b8ae18c9ed40e9f63186ba0592e56";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Jim_Chen 的小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Walk steps step by step!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                $watch, $apply, $digest的关系
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-08T11:34:12+08:00" content="2016-08-08">
+              2016-08-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术类/" itemprop="url" rel="index">
+                    <span itemprop="name">技术类</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/08/$watch-$apply-$digest/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/08/$watch-$apply-$digest/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>AngularJS中我们熟知的双向数据绑定，可是它到底怎么运作的，就和这几个概念有关，然而这几个概念很容易混淆视听，而且几个概念之间关系也很容易搞得扑朔迷离，但是看了一篇博文之后茅塞顿开，今天就来分享一下算是读后感吧。</p>
+<h2 id="Let’s-start-from-the-beginning"><a href="#Let’s-start-from-the-beginning" class="headerlink" title="Let’s start from the beginning!"></a>Let’s start from the beginning!</h2><a id="more"></a>
+<h2 id="一、浏览器事件与AngularJS的扩展"><a href="#一、浏览器事件与AngularJS的扩展" class="headerlink" title="一、浏览器事件与AngularJS的扩展"></a>一、浏览器事件与AngularJS的扩展</h2><p>我们的浏览器都是等待事件，例如我们触发一个按钮或者表单的输入，这些事件都会带有一个回调机制来通知我们浏览器接下来要做什么，所以在回调函数中我们可以对相应的DOM进行操作，等到回调完毕，浏览器就会相应对DOM做出变化。AngularJS扩展了这个机制，不但但是回调，而是事件循环生成一个有时成为AngularJS的上下文执行环境</p>
+<h2 id="二、-watch队列"><a href="#二、-watch队列" class="headerlink" title="二、$watch队列"></a>二、$watch队列</h2><p>任何时候当你在视图上绑定了AngularJS事件时，都会在<code>$watch</code>队列插入一个<code>$watch</code>。这个<code>$watch</code>可以检测到model上的变化。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">User: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">ng-model</span>=<span class="string">"user"</span> /&gt;</span></span><br><span class="line">Password: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"password"</span> <span class="attr">ng-model</span>=<span class="string">"password"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">app.controller(<span class="string">"myCtrl"</span>, [<span class="string">'$scope'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    $scope.user = <span class="string">"jim"</span>;</span><br><span class="line">    $scope.password = <span class="number">123</span>;</span><br><span class="line">&#125;]);</span><br></pre></td></tr></table></figure>
+<p>在这里我们就会有<code>$scope.user</code>与<code>$scope.password</code>，负责绑定视图上的对应的输入框，这样我们就有了两个<code>$watch</code></p>
+<p>我们再看看下面例子</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">app.controller(<span class="string">"myCtrl"</span>, [<span class="string">'$scope'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    $scope.world = <span class="string">"World"</span>;</span><br><span class="line">    $scope.foo = <span class="string">"Foo"</span>;</span><br><span class="line">&#125;]);</span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello, &#123;&#123;world&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里我们只是为一个视图绑定(尽管<code>$scope</code>上绑定两个值)，但是这里还只是创建了一个<code>$watch</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.controller(<span class="string">"myCtrl"</span>, [<span class="string">'$scope'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    $scope.people = [...];</span><br><span class="line">&#125;]);</span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">ng-repeat</span>=<span class="string">"person in people"</span>&gt;</span></span><br><span class="line">        &#123;&#123;person.name&#125;&#125; - &#123;&#123;person.age&#125;&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在这里<code>ng-repeat</code>指令是在循环<code>$scope.people</code>数组，假设数组有10个元素，在视图上每个元素都绑定了两个<code>$watch</code>，注意还有一个<code>$watch</code>是来自于<code>ng-repeat</code>指令，所以<code>$watch队列</code>中总共有 <code>(2 * 10) + 1</code> 个<code>$watch</code>，也就是21个。</p>
+<p>那么只要视图上有一事件进行绑定就有一个<code>$watch</code>创建，那什么时候创建<code>$watch</code></p>
+<p>我们Angular应用执行分为三个阶段( 加载load-编译compile-链接link )，在编译阶段Angular会遍历所有指令然后创建所有需要的<code>$watch</code>，创建后那接下来怎么样呢？</p>
+<h2 id="三、-digest循环"><a href="#三、-digest循环" class="headerlink" title="三、$digest循环"></a>三、$digest循环</h2><p>之前说到Angular扩展了事件循环，当浏览器接收到能通过Angular应用的上下文处理的事件时<code>$digest</code>循环就会触发，这个循环分为两个小循环。一个是<code>$evalAsync</code>队列然后另外一个是<code>$watch</code>队列，在<code>$watch</code>队列循环中，就会进行一个“脏值检测”( <code>dirty-checking</code> )过程，通过至少两次循环来检测<code>$watch</code>是否发生变化，没有发生变化就能确定<code>$watch</code>不再变化，就会退出循环。但是如果一直变化，Angular也不会一直触发循环。当循环次数超过10次时，它会抛出一个异常，防止应用陷入无限循环中。当<code>$digest</code>循环结束时，DOM就会做出相应地变化。</p>
+<p>例子：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ng-controller</span>=<span class="string">"myCtrl"</span>&gt;</span></span><br><span class="line">    &#123;&#123;name&#125;&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">ng-click</span>=<span class="string">"change()"</span>&gt;</span>Change<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line">    ...</span><br><span class="line">    app.controller(<span class="string">'myCtrl'</span>, [<span class="string">'$scope'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">$scope</span>) </span>&#123;</span><br><span class="line">        $scope.name = <span class="string">"Jane"</span>;</span><br><span class="line">        $scope.change = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            $scope.name = <span class="string">"Jim"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;]);</span><br><span class="line"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在这里只有一个<code>$watch</code>，因为<code>ng-click</code>不会创建<code>$watch</code>(函数是不会发生变化的)<br>那么分析如下：</p>
+<ul>
+<li>当我们点击按钮时</li>
+<li>浏览器接收到一个进入Angular上下文的事件</li>
+<li>由于检测<code>$scope.name</code>变化的<code>$watch</code>报告了变化，就会触发另外一次<code>$digest</code>循环</li>
+<li>直到新的循环报告没有发生变化时</li>
+<li>浏览器得到控制权然后更新与<code>$scope.name</code>相关的DOM部分</li>
+</ul>
+<p>从这里我们可以知道一个重要信息，当每一个进入Angular上下文的事件触发时都会触发新的一轮<code>$digest</code>循环，这意味着我们在输入框输入每一个字母，数字或符号时都触发<code>$digest</code>循环检测整个页面的每一个<code>$watch</code>变化。</p>
+<h2 id="四、-watch应用"><a href="#四、-watch应用" class="headerlink" title="四、$watch应用"></a>四、$watch应用</h2><p>那我们什么时候需要用到手动使用<code>$watch</code>创建Angular上下文事件呢？我们看一下这个例子</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">number: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">ng-model</span>=<span class="string">"number"</span> /&gt;</span>&amp;nbsp;&amp;nbsp;&#123;&#123;number&#125;&#125;</span><br><span class="line">price-per-unit: &#123;&#123;per&#125;&#125; </span><br><span class="line">total-price: &#123;&#123;price&#125;&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line">    <span class="keyword">var</span> app = angular.module(<span class="string">'myApp'</span>, []);</span><br><span class="line">    app.controller(<span class="string">'myCtrl'</span>, [<span class="string">'$scope'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">$scope</span>) </span>&#123;</span><br><span class="line">        $scope.per = <span class="number">10</span>;</span><br><span class="line">        $scope.number = <span class="number">0</span>;</span><br><span class="line">        $scope.price = $scope.number * $scope.per;</span><br><span class="line">    &#125;]);</span><br><span class="line"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我们初始化了数量以及单价，相应计算总价，然而我们会发现，当我们在视图上改变数量时，我们发现只有<code>$scope.number</code>发现了改变反应到视图上，而<code>$scope.price</code>并没有发生变化所以在视图上没有变化。为什么呢？</p>
+<p>原因在于指令<code>ng-model</code>，具体原因等下再说，那现在我们怎么办呢？</p>
+<p>其实我们有两种办法：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">number: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">ng-model</span>=<span class="string">"number"</span> <span class="attr">ng-change</span>=<span class="string">"totalCount()"</span>/&gt;</span></span><br><span class="line">&amp;nbsp;&amp;nbsp;&#123;&#123;number&#125;&#125;</span><br><span class="line">price-per-unit: &#123;&#123;per&#125;&#125; </span><br><span class="line">total-price: &#123;&#123;price&#125;&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line">    ...</span><br><span class="line">    app.controller(<span class="string">'myCtrl'</span>, [<span class="string">'$scope'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">$scope</span>) </span>&#123;</span><br><span class="line">        $scope.per = <span class="number">10</span>;</span><br><span class="line">        $scope.number = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        $scope.totalCount = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            $scope.price = $scope.number * $scope.per;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;]);</span><br><span class="line"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/asset/2016/2016-08-08_0231.png" alt="browser"><br><img src="/images/asset/2016/2016-08-08_231.png" alt="console"></p>
+<p>至于为什么使用<code>ng-change</code>指令也可以呢，其实从源码可以看出<code>ng-change</code>指令是依赖于<code>ng-model</code>指令，所以还是等会从<code>ng-model</code>指令入手</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ngChangeDirective = valueFn(&#123;</span><br><span class="line">  restrict: <span class="string">'A'</span>,</span><br><span class="line">  <span class="built_in">require</span>: <span class="string">'ngModel'</span>,</span><br><span class="line">  link: <span class="function"><span class="keyword">function</span>(<span class="params">scope, element, attr, ctrl</span>) </span>&#123;</span><br><span class="line">    ctrl.$viewChangeListeners.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      scope.$<span class="built_in">eval</span>(attr.ngChange);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>第二种方法呢我们就是调用$watch函数监控变化</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">number: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">ng-model</span>=<span class="string">"number"</span> /&gt;</span></span><br><span class="line">&amp;nbsp;&amp;nbsp;&#123;&#123;number&#125;&#125;</span><br><span class="line">price-per-unit: &#123;&#123;per&#125;&#125; </span><br><span class="line">total-price: &#123;&#123;price&#125;&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line">    ...</span><br><span class="line">    app.controller(<span class="string">'myCtrl'</span>, [<span class="string">'$scope'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">$scope</span>) </span>&#123;</span><br><span class="line">        $scope.per = <span class="number">10</span>;</span><br><span class="line">        $scope.number = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        $scope.$watch(<span class="string">'number'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">newValue, oldValue, scope</span>) </span>&#123;</span><br><span class="line">            scope.price = scope.number * scope.per;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;]);</span><br><span class="line"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/asset/2016/2016-08-08_251.png" alt="browser"><br><img src="/images/asset/2016/2016-08-08_0251.png" alt="console"></p>
+<p>这里的意思就是检测<code>$scope.number</code>的变化，当<code>$scope.number</code>发生变化时就会触发回调函数，而且还会触发<code>$digest</code>循环，所以可以说我们就为<code>$scope.price</code>定义一个Angular上下文事件，触发条件就是<code>$scope.number</code>变化，从回调函数我们也可以看出，<code>$watch</code>内部会将上一次的值<code>oldValue</code>缓存起来，就可以猜测到<code>$digest</code>循环是可以获取到上一次的值作比较的。</p>
+<p>我们一直强调Angular上下文环境，那怎么才会进入Angular上下文环境呢？</p>
+<h2 id="五、通过-apply进入Angular上下文环境"><a href="#五、通过-apply进入Angular上下文环境" class="headerlink" title="五、通过$apply进入Angular上下文环境"></a>五、通过$apply进入Angular上下文环境</h2><p>当事件触发时，调用<code>$apply</code>就会进入Angular上下文环境，但是如果你不调用就不会进入，就好比<code>ng-click</code>指令，当你点击带有此指令的按钮时，Angular会自动帮你封装到<code>$apply</code>中调用，使得进入Angular上下文才能让view与model建立数据绑定。</p>
+<p>那么现在我们可以回答刚刚<code>ng-model</code>指令的问题了：其实<code>ng-model</code>中也是Angular封装在<code>$apply</code>中调用，可以从源码看出</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这是NgModelController中的方法</span></span><br><span class="line"><span class="comment">// 这里的value就是我们输入框的输入的value</span></span><br><span class="line"><span class="comment">// 这里ctrl是this的拷贝，this指向NgModelController</span></span><br><span class="line"><span class="keyword">this</span>.$setViewValue = <span class="function"><span class="keyword">function</span>(<span class="params">value, trigger</span>) </span>&#123;</span><br><span class="line">    ctrl.$viewValue = value;</span><br><span class="line">    <span class="keyword">if</span> (!ctrl.$options || ctrl.$options.updateOnDefault) &#123;</span><br><span class="line">      <span class="comment">// 方法具体在下面  </span></span><br><span class="line">      ctrl.$$debounceViewValueCommit(trigger);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">this</span>.$$debounceViewValueCommit = <span class="function"><span class="keyword">function</span>(<span class="params">trigger</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> debounceDelay = <span class="number">0</span>,</span><br><span class="line">        options = ctrl.$options,</span><br><span class="line">        debounce;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (options &amp;&amp; isDefined(options.debounce)) &#123;</span><br><span class="line">      debounce = options.debounce;</span><br><span class="line">      <span class="keyword">if</span> (isNumber(debounce)) &#123;</span><br><span class="line">        debounceDelay = debounce;</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isNumber(debounce[trigger])) &#123;</span><br><span class="line">        debounceDelay = debounce[trigger];</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isNumber(debounce[<span class="string">'default'</span>])) &#123;</span><br><span class="line">        debounceDelay = debounce[<span class="string">'default'</span>];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $timeout.cancel(pendingDebounce);</span><br><span class="line">    <span class="keyword">if</span> (debounceDelay) &#123;</span><br><span class="line">      pendingDebounce = $timeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        ctrl.$commitViewValue();</span><br><span class="line">      &#125;, debounceDelay);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> ($rootScope.$$phase) &#123;</span><br><span class="line">      ctrl.$commitViewValue();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      $scope.$apply(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;    <span class="comment">// 我们看到这里的$apply</span></span><br><span class="line">        ctrl.$commitViewValue();</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>我们从<code>$setViewValue</code>方法可知获取到输入的value值后直接赋值给<code>ngModelController</code>方法的属性<code>$viewValue</code>然后调用了<code>$$debounceViewValueCommit</code>方法，我们聚焦到最后，直接调用了<code>$apply</code>执行视图的更新，调用了<code>$commitViewValue()</code>，从解析上看是把未更新的数据提交给<code>$modelValue</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * @ngdoc method</span><br><span class="line">   * @name ngModel.NgModelController#$commitViewValue</span><br><span class="line">   *</span><br><span class="line">   * @description</span><br><span class="line">   * Commit a pending update to the `$modelValue`.</span><br><span class="line">   *</span><br><span class="line">   * Updates may be pending by a debounced event or because the input is waiting for a some future</span><br><span class="line">   * event defined in `ng-model-options`. this method is rarely needed as `NgModelController`</span><br><span class="line">   * usually handles calling this in response to input events.</span><br><span class="line">   */</span><br></pre></td></tr></table></figure>
+<p>然后继续查看会发现最终调用<code>ngModelController</code>一个方法<code>$$writeModelToScope</code>，从源码看，最终它把<code>$modelValue</code>绑定到Scope上，于是建立起了<code>model-view</code>的关系</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">this.$$writeModelToScope = function() &#123;</span><br><span class="line">    ngModelSet($scope, ctrl.$modelValue);   // 这里</span><br><span class="line">    forEach(ctrl.$viewChangeListeners, function(listener) &#123;</span><br><span class="line">      try &#123;</span><br><span class="line">        listener();</span><br><span class="line">      &#125; catch (e) &#123;</span><br><span class="line">        $exceptionHandler(e);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="六、什么时候Angular不会自动为我们调用-apply"><a href="#六、什么时候Angular不会自动为我们调用-apply" class="headerlink" title="六、什么时候Angular不会自动为我们调用$apply"></a>六、什么时候Angular不会自动为我们调用$apply</h2><p>其实很通俗来说，只要你触发的事件属于Angular管辖范围，都会进入Angular上下文环境，也就是说若触发的事件不属于Angular的，这时为了进入Angular上下文我们就必须手动调用<code>$apply</code>，比如说我用第三方库(JQuery)为DOM绑定各种事件时，这些事件就不属于Angular管辖，若想要触发这些事件时进入Angular上下文环境，就必须调用<code>$apply</code>才会进入<code>$digest</code>循环</p>
+<p>例子：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ng-controller</span>=<span class="string">"myCtrl"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">clickable</span> <span class="attr">foo</span>=<span class="string">"foo"</span> <span class="attr">bar</span>=<span class="string">"bar"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line">    <span class="keyword">var</span> app = angular.module(<span class="string">'myApp'</span>, []);</span><br><span class="line"></span><br><span class="line">    app.directive(<span class="string">'clickable'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            restrict: <span class="string">"E"</span>,</span><br><span class="line">            scope: &#123;</span><br><span class="line">                foo: <span class="string">"="</span>,</span><br><span class="line">                bar: <span class="string">"="</span></span><br><span class="line">            &#125;,</span><br><span class="line">            template: <span class="string">'&lt;ul style="background-color: lightblue"&gt;&lt;li&gt;&#123;&#123;foo&#125;&#125;&amp;nbsp;&amp;nbsp;&lt;button&gt;触发&lt;/button&gt;&lt;/li&gt;&lt;li&gt;&#123;&#123;bar&#125;&#125;&amp;nbsp;&amp;nbsp;&lt;button&gt;触发&lt;/button&gt;&lt;/li&gt;&lt;/ul&gt;'</span>,</span><br><span class="line">            link: <span class="function"><span class="keyword">function</span>(<span class="params">scope, element, attrs</span>) </span>&#123;</span><br><span class="line">                element.bind(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                    scope.foo++;</span><br><span class="line">                    scope.bar++;</span><br><span class="line">                    <span class="built_in">console</span>.log(<span class="string">"foo="</span> + scope.foo + <span class="string">"/bar="</span> + scope.bar);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    app.controller(<span class="string">'myCtrl'</span>, [<span class="string">'$scope'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">$scope</span>) </span>&#123;</span><br><span class="line">        $scope.foo = <span class="number">0</span>;</span><br><span class="line">        $scope.bar = <span class="number">0</span>;</span><br><span class="line">    &#125;]);    </span><br><span class="line"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/asset/2016/2016-08-08_532.png" alt="browser"><br><img src="/images/asset/2016/2016-08-08_0532.png" alt="console"></p>
+<p>我们在link函数中对DOM绑定一个事件，每次点击元素时都会使<code>foo</code>和<code>bar</code>自增1</p>
+<p>无论我们怎么触发，我们可以发现model上的值是发生了改变，可是没有反应到view上，因为没有进行<code>$digest</code>循环，监视<code>foo</code>和<code>bar</code>的<code>$watch</code>没有执行。也就是说我们必须手动执行<code>$apply</code>，这样<code>$watch</code>才会知道变化并通知DOM的更新。</p>
+<p>我们必须改写<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">element.bind(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    scope.foo++;</span><br><span class="line">    scope.bar++;</span><br><span class="line">    scope.$apply();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/asset/2016/2016-08-08_543.png" alt="browser"><br><img src="/images/asset/2016/2016-08-08_0532.png" alt="console"></p>
+<p>当然我们拥有更好的写法就是</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">element.bind(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    scope.$apply(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        scope.foo++;</span><br><span class="line">        scope.bar++;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>原因在于<code>$apply</code>内部封装了一套<code>try-catch</code>异常处理，我们的逻辑代码如果出现异常可以直接交给Angular处理，所以更加建议这样的写法。</p>
+<p>所以说白了，只要是第三方库(例如<code>JQuery</code>)更新绑定的数据，Angular就无法知道，这时我们就必须调用<code>$apply</code>通知Angular。</p>
+<hr>
+<p>博客原文：<a href="http://angular-tips.com/blog/2013/08/watch-how-the-apply-runs-a-digest/" target="_blank" rel="external">http://angular-tips.com/blog/2013/08/watch-how-the-apply-runs-a-digest/</a><br>Angular源码：<a href="https://code.angularjs.org/1.4.12/angular.js" target="_blank" rel="external">https://code.angularjs.org/1.4.12/angular.js</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您的支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/pay/alipay.png" alt="Jim_Chen Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag">#前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/06/q-AngularJS/" rel="next" title="关于AngularJS的$q">
+                <i class="fa fa-chevron-left"></i> 关于AngularJS的$q
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/10/provider-factory-service之间比较/" rel="prev" title="Provider, Factory, Service之间比较">
+                Provider, Factory, Service之间比较 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar/20160420.jpg"
+               alt="Jim_Chen" />
+          <p class="site-author-name" itemprop="name">Jim_Chen</p>
+          <p class="site-description motion-element" itemprop="description">Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JimChenWYU" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/JimChenPHPer" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Let’s-start-from-the-beginning"><span class="nav-number">1.</span> <span class="nav-text">Let’s start from the beginning!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、浏览器事件与AngularJS的扩展"><span class="nav-number">2.</span> <span class="nav-text">一、浏览器事件与AngularJS的扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、-watch队列"><span class="nav-number">3.</span> <span class="nav-text">二、$watch队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、-digest循环"><span class="nav-number">4.</span> <span class="nav-text">三、$digest循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、-watch应用"><span class="nav-number">5.</span> <span class="nav-text">四、$watch应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、通过-apply进入Angular上下文环境"><span class="nav-number">6.</span> <span class="nav-text">五、通过$apply进入Angular上下文环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、什么时候Angular不会自动为我们调用-apply"><span class="nav-number">7.</span> <span class="nav-text">六、什么时候Angular不会自动为我们调用$apply</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jim_Chen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jimchen';
+      var disqus_identifier = '2016/08/08/$watch-$apply-$digest/';
+      var disqus_title = '$watch, $apply, $digest的关系';
+      var disqus_url = 'http://blog.chenjunwu.com/2016/08/08/$watch-$apply-$digest/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.html";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+  
+
+  
+
+  
+  
+</body>
+</html>

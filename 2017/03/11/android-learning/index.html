@@ -1,0 +1,892 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jim_Chen 的小站" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="最近看着郭婶的《第一行代码 第二版》的书开始学习Android，从头到尾一步一步来敲代码，理解概念，感觉特别适合我这种Android开发小白，理论与实践都有，偏重实践，推荐大家支持郭神的新书，我是在京东买的，特便宜，链接如下：https://item.jd.com/11054290852.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android学习记录">
+<meta property="og:url" content="http://blog.chenjunwu.com/2017/03/11/android-learning/index.html">
+<meta property="og:site_name" content="Jim_Chen 的小站">
+<meta property="og:description" content="最近看着郭婶的《第一行代码 第二版》的书开始学习Android，从头到尾一步一步来敲代码，理解概念，感觉特别适合我这种Android开发小白，理论与实践都有，偏重实践，推荐大家支持郭神的新书，我是在京东买的，特便宜，链接如下：https://item.jd.com/11054290852.html">
+<meta property="og:updated_time" content="2017-03-11T04:37:15.766Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android学习记录">
+<meta name="twitter:description" content="最近看着郭婶的《第一行代码 第二版》的书开始学习Android，从头到尾一步一步来敲代码，理解概念，感觉特别适合我这种Android开发小白，理论与实践都有，偏重实践，推荐大家支持郭神的新书，我是在京东买的，特便宜，链接如下：https://item.jd.com/11054290852.html">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Android学习记录 | Jim_Chen 的小站 </title>
+  <!-- 自定义引入Service Worker -->
+  <script>
+    (function () {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js');
+      }
+    }())
+  </script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?847b8ae18c9ed40e9f63186ba0592e56";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Jim_Chen 的小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Walk steps step by step!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android学习记录
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-11T12:35:00+08:00" content="2017-03-11">
+              2017-03-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术类/" itemprop="url" rel="index">
+                    <span itemprop="name">技术类</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/03/11/android-learning/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/03/11/android-learning/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近看着郭婶的《第一行代码 第二版》的书开始学习Android，从头到尾一步一步来敲代码，理解概念，感觉特别适合我这种Android开发小白，理论与实践都有，偏重实践，推荐大家支持郭神的新书，我是在京东买的，特便宜，链接如下：<a href="https://item.jd.com/11054290852.html" target="_blank" rel="external">https://item.jd.com/11054290852.html</a></p>
+<a id="more"></a>
+<h2 id="gradle文件详解"><a href="#gradle文件详解" class="headerlink" title="gradle文件详解"></a>gradle文件详解</h2><p>一个Android Studio的项目工程一般有两个gradle文件，最外层gradle文件如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath &apos;com.android.tools.build:gradle:2.2.0&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">allprojects &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>buildscript</code>的<code>repositories</code>闭包里的<code>jcenter()</code>是引用Android的代码库，Android许多开源库都托管在这里，可以便于使用开源库。<br><code>dependencies</code>闭包是指依赖，依赖一个gradle插件，Android Studio是使用gradle来构建Android项目的。<br><code>allprojects</code>的<code>repositories</code>闭包里的<code>jcenter()</code>同理</p>
+<p>app目录下的gradle文件如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: &apos;com.android.application&apos;</span><br><span class="line"></span><br><span class="line">android &#123;</span><br><span class="line">    compileSdkVersion 25</span><br><span class="line">    buildToolsVersion &quot;25.0.2&quot;</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        applicationId &quot;com.coolweather.android&quot;</span><br><span class="line">        minSdkVersion 15</span><br><span class="line">        targetSdkVersion 25</span><br><span class="line">        versionCode 1</span><br><span class="line">        versionName &quot;1.0&quot;</span><br><span class="line">        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled false</span><br><span class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    compile fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])</span><br><span class="line">    androidTestCompile(&apos;com.android.support.test.espresso:espresso-core:2.2.2&apos;, &#123;</span><br><span class="line">        exclude group: &apos;com.android.support&apos;, module: &apos;support-annotations&apos;</span><br><span class="line">    &#125;)</span><br><span class="line">    testCompile &apos;junit:junit:4.12&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>apply plugin</code>表示应用插件，两种选择，application表示应用模块，library表示库模块。两者最大区别在于，一个可以直接运行，一个只能作为代码库依附于别的应用程序模块来运行。</p>
+<p><code>android</code>闭包：1. compileSdkVersion配置编译版本，25表示使用Android7.1.1版本编译，具体查看可以使用Android Studio的SDK Manager查看。</p>
+<ol>
+<li>buildToolsVersion用于指定项目构建工具版本</li>
+<li><code>defaultConfig</code>闭包的applicationId指项目包名，minSdkVersion指项目最低兼容的<code>Android</code>系统版本，这里指定成15表示最低兼容到Android 4.0系统。targetSdkVersion指定的值表示你在该目标版本上已经做过充分测试，系统就会为应用启用一些最新的功能和特性。比如说，Android 6.0系统中引入了运用时权限这个功能，如果你将targetSdkVersion指定成23或者更高，那么系统就会为你的程序启用这个功能，但是如果指定22，说明你的应用只在Android 5.1系统上做过充分测试，那么系统以上版本的新功能就不会启用。versionCode和versionName用于指定项目的版本名，这两个属性在生成安装文件的时候非常重要。</li>
+<li><code>buildTypes</code>闭包中用于指定两个子闭包，一个是debug，一个是release。debug闭包用于指定生成测试版安装文件的配置，release闭包用于指定生成正式版安装文件配置，里面的minifyEnabled用于指定是否对项目代码进行混淆，true为是，false为否，proguardFiles是指定混淆代码的规则，默认规则在Android SDK目录下，第二个文件可以用来自定义应用的混淆规则，文件在当前根目录下local.properties。</li>
+<li><code>dependencies</code>闭包分为本地依赖，远程依赖，库依赖。文件第一行的compile fileTree(dir: ‘libs’, include: [‘*.jar’])就是本地依赖，依赖本项目的libs目录下所有.jar后缀的文件，都会添加到项目构建当中来。后面的依赖就是远程依赖，AS版本不同导致gradle版本不同或许写法上有些许差别。库依赖是compile project后面加上要依赖的库名称，比如说有一个库模块叫helper，那么依赖就写为compile project(‘:helper’)。</li>
+</ol>
+<h2 id="用到的开源库记录"><a href="#用到的开源库记录" class="headerlink" title="用到的开源库记录"></a>用到的开源库记录</h2><h3 id="Litepal"><a href="#Litepal" class="headerlink" title="Litepal"></a>Litepal</h3><ol>
+<li><p>介绍<br>Android操作sqlite数据库的orm框架，github地址：<a href="https://github.com/LitePalFramework/LitePal" target="_blank" rel="external">https://github.com/LitePalFramework/LitePal</a></p>
+</li>
+<li><p>简单用法<br>首先必须在AndroidManifest.xml文件中为application标签添加属性android:name=”org.litepal.LitePalApplication”，这样的目的是为了让litepal内部拿到context，当然如果你有自己的application配置，为了让litepal可以正常工作我们可以在自己的application的onCreate方法中初始化，LitePal.initialize(context)，这里context=getApplicationContext()</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">application</span></span><br><span class="line">    <span class="attr">android:name</span>=<span class="string">"org.litepal.LitePalApplication"</span></span><br><span class="line">    <span class="attr">android:allowBackup</span>=<span class="string">"true"</span></span><br><span class="line">    <span class="attr">android:icon</span>=<span class="string">"@mipmap/logo"</span></span><br><span class="line">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span><br><span class="line">    <span class="attr">android:roundIcon</span>=<span class="string">"@mipmap/ic_launcher_round"</span></span><br><span class="line">    <span class="attr">android:supportsRtl</span>=<span class="string">"true"</span></span><br><span class="line">    <span class="attr">android:theme</span>=<span class="string">"@style/AppTheme"</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>之后使用实体类继承Litepal框架里的DataSupport类，接着需要实体类映射到指定的表中<br>在main目录下建文件夹assets目录，在此目录下建文件litepal.xml，</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">litepal</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dbname</span> <span class="attr">value</span>=<span class="string">"cool_weather"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span> <span class="attr">value</span>=<span class="string">"1"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">list</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mapping</span> <span class="attr">class</span>=<span class="string">"com.coolweather.android.db.Province"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mapping</span> <span class="attr">class</span>=<span class="string">"com.coolweather.android.db.City"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mapping</span> <span class="attr">class</span>=<span class="string">"com.coolweather.android.db.County"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">list</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">litepal</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>dbname指数据库名，version指版本号，变更版本号可以升级数据库，比如当你希望在表中添加一列，此时在实体类中添加一属性之后，只要升级版本号，当进行一次数据库操作时litepal就会自动更新表，而且表中的数据并不会被删掉</p>
+<h3 id="Okhttp"><a href="#Okhttp" class="headerlink" title="Okhttp"></a>Okhttp</h3><ol>
+<li><p>介绍<br>okhttp是由square公司开发的java网络请求库。github地址：<a href="https://github.com/square/okhttp" target="_blank" rel="external">https://github.com/square/okhttp</a></p>
+</li>
+<li><p>简单用法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">OkHttpClient client = <span class="keyword">new</span> OkHttpClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Request request = <span class="keyword">new</span> Request.Builder()</span><br><span class="line">                .url(url)</span><br><span class="line">                .build();</span><br><span class="line">        Response response = client.newCall(request).execute();</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).start();</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="Gson"><a href="#Gson" class="headerlink" title="Gson"></a>Gson</h3><ol>
+<li><p>介绍<br>gson是由google公司提供的java语言对json数据解析的开源库，github地址：<a href="https://github.com/google/gson" target="_blank" rel="external">https://github.com/google/gson</a></p>
+</li>
+<li><p>简单用法</p>
+</li>
+</ol>
+<p>将json字符串映射到实体类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 解析json</span></span><br><span class="line"><span class="keyword">new</span> Gson().fromJson(jsonString, Entity.class);   <span class="comment">//返回值为Entity的一个实例对象</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成json</span></span><br><span class="line"><span class="keyword">new</span> Gson().toJson(<span class="keyword">new</span> Entity(...));     <span class="comment">// 返回以Entity为实体类的json字符串</span></span><br></pre></td></tr></table></figure></p>
+<p>具体使用可以查看<a href="http://www.jianshu.com/p/e740196225a4" target="_blank" rel="external">这里</a></p>
+<h3 id="Butterknife"><a href="#Butterknife" class="headerlink" title="Butterknife"></a>Butterknife</h3><ol>
+<li><p>介绍<br>由square公司JakeWharton员工开发，配合AS插件Android BufferKnife Zelezny使用<br>，可以让layout的view通过butterknife自动注入，再也不用写一大堆findViewById。</p>
+</li>
+<li><p>简单使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@BindView</span>(R.id.send_request)</span><br><span class="line">    Button sendRequest;</span><br><span class="line">    <span class="meta">@BindView</span>(R.id.response_text)</span><br><span class="line">    TextView responseText;</span><br><span class="line">    <span class="meta">@BindView</span>(R.id.get_url)</span><br><span class="line">    EditText getUrl;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        ButterKnife.bind(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@OnClick</span>(R.id.send_request)</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setSendRequest</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="Glide"><a href="#Glide" class="headerlink" title="Glide"></a>Glide</h3><ol>
+<li><p>介绍<br>这是一个图片加载库，为什么需要它呢，因为在Android端展示图片，如果图片像素太高会操作应用内存溢出，而这个库能够对图片进行处理再加载，有效防止因加载图片而发生的内存溢出问题，当然这个还有很多神奇好玩的特性有待尝试，github地址：<a href="https://github.com/bumptech/glide" target="_blank" rel="external">https://github.com/bumptech/glide</a></p>
+</li>
+<li><p>简单使用</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Glide.with(Context).load(URL).into(ImageView);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 一句代码就搞定，是不是很简单，</span></span><br><span class="line"><span class="comment">// with()方法传入一个Context，Activity或者Fragment参数，</span></span><br><span class="line"><span class="comment">// 然后调用load()方法去加载图片，这里可以传入一个URL地址，本地图片路径或者一个资源id，</span></span><br><span class="line"><span class="comment">// 最后调用into()方法将图片设置到具体到某一个ImageView中就可以了。</span></span><br></pre></td></tr></table></figure>
+<p>未完，待续。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您的支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/pay/alipay.png" alt="Jim_Chen Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/13/phpstorm-psr2/" rel="next" title="phpstorm-psr2">
+                <i class="fa fa-chevron-left"></i> phpstorm-psr2
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar/20160420.jpg"
+               alt="Jim_Chen" />
+          <p class="site-author-name" itemprop="name">Jim_Chen</p>
+          <p class="site-description motion-element" itemprop="description">Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JimChenWYU" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/JimChenPHPer" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#gradle文件详解"><span class="nav-number">1.</span> <span class="nav-text">gradle文件详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用到的开源库记录"><span class="nav-number">2.</span> <span class="nav-text">用到的开源库记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Litepal"><span class="nav-number">2.1.</span> <span class="nav-text">Litepal</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Okhttp"><span class="nav-number">2.2.</span> <span class="nav-text">Okhttp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gson"><span class="nav-number">2.3.</span> <span class="nav-text">Gson</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Butterknife"><span class="nav-number">2.4.</span> <span class="nav-text">Butterknife</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Glide"><span class="nav-number">2.5.</span> <span class="nav-text">Glide</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jim_Chen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jimchen';
+      var disqus_identifier = '2017/03/11/android-learning/';
+      var disqus_title = 'Android学习记录';
+      var disqus_url = 'http://blog.chenjunwu.com/2017/03/11/android-learning/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.html";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+  
+
+  
+
+  
+  
+</body>
+</html>

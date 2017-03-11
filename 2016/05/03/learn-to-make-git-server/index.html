@@ -1,0 +1,896 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="服务器," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jim_Chen 的小站" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="这次博主总结了一下自己如何在Linux上搭建自己的git服务器，并且可以完成自动部署本次用到Linux的发行版centos7
+废话不多说，动手是关键！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10分钟避坑搭建git服务器">
+<meta property="og:url" content="http://blog.chenjunwu.com/2016/05/03/learn-to-make-git-server/index.html">
+<meta property="og:site_name" content="Jim_Chen 的小站">
+<meta property="og:description" content="这次博主总结了一下自己如何在Linux上搭建自己的git服务器，并且可以完成自动部署本次用到Linux的发行版centos7
+废话不多说，动手是关键！">
+<meta property="og:updated_time" content="2016-06-23T14:45:59.675Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="10分钟避坑搭建git服务器">
+<meta name="twitter:description" content="这次博主总结了一下自己如何在Linux上搭建自己的git服务器，并且可以完成自动部署本次用到Linux的发行版centos7
+废话不多说，动手是关键！">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 10分钟避坑搭建git服务器 | Jim_Chen 的小站 </title>
+  <!-- 自定义引入Service Worker -->
+  <script>
+    (function () {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js');
+      }
+    }())
+  </script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?847b8ae18c9ed40e9f63186ba0592e56";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Jim_Chen 的小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Walk steps step by step!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                10分钟避坑搭建git服务器
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-03T23:19:40+08:00" content="2016-05-03">
+              2016-05-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术类/" itemprop="url" rel="index">
+                    <span itemprop="name">技术类</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/03/learn-to-make-git-server/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/05/03/learn-to-make-git-server/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这次博主总结了一下自己如何在Linux上搭建自己的git服务器，并且可以完成自动部署<br>本次用到Linux的发行版centos7</p>
+<h2 id="废话不多说，动手是关键！"><a href="#废话不多说，动手是关键！" class="headerlink" title="废话不多说，动手是关键！"></a>废话不多说，动手是关键！</h2><a id="more"></a>
+<h3 id="1-本机创建公钥和私钥"><a href="#1-本机创建公钥和私钥" class="headerlink" title="1. 本机创建公钥和私钥"></a>1. 本机创建公钥和私钥</h3><p>  <strong>windows下借用git-bash</strong></p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -keygen -t rsa</span><br></pre></td></tr></table></figure>
+<p> 默认在本用户目录下生成公钥和私钥,过程中会要求设置ssh访问的密码，为了方便我们可以设置为空，一路回车即可</p>
+<p>  <strong>Linux下操作基本一致</strong></p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ28d7lnghjZ ~]# ssh -keygen -t rsa</span><br></pre></td></tr></table></figure>
+<p> 这里我们快速略过</p>
+<h3 id="2-在服务器上创建git用户"><a href="#2-在服务器上创建git用户" class="headerlink" title="2. 在服务器上创建git用户"></a>2. 在服务器上创建git用户</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ28d7lnghjZ ~]# adduser git</span><br><span class="line">[root@iZ28d7lnghjZ ~]# passwd git 	//这里可以修改git用户密码</span><br></pre></td></tr></table></figure>
+<h3 id="3-服务器上录入公钥"><a href="#3-服务器上录入公钥" class="headerlink" title="3. 服务器上录入公钥"></a>3. 服务器上录入公钥</h3><ul>
+<li>把所有公钥复制到<code>/home/git/.ssh/authorized_keys</code>文件里，一行一个。</li>
+<li>注：没有.ssh与authorized_keys文件可自行创建,创建.ssh时记得更改拥有者和权限</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ28d7lnghjZ git]# ls -al</span><br><span class="line">total 24</span><br><span class="line">drwx------  3 git  git  4096 Apr  4 10:12 .</span><br><span class="line">drwxr-xr-x. 3 root root 4096 Apr  4 09:59 ..</span><br><span class="line">-rw-r--r--  1 git  git    18 Nov 20 13:02 .bash_logout</span><br><span class="line">-rw-r--r--  1 git  git   193 Nov 20 13:02 .bash_profile</span><br><span class="line">-rw-r--r--  1 git  git   231 Nov 20 13:02 .bashrc</span><br><span class="line">drwx------  2 root  root  4096 Apr  4 13:37 .ssh</span><br><span class="line">[root@iZ28d7lnghjZ git]# chown -R git:git .ssh </span><br><span class="line">[root@iZ28d7lnghjZ git]# chmod 700 .ssh </span><br><span class="line">[root@iZ28d7lnghjZ git]# ls -al</span><br><span class="line">total 24</span><br><span class="line">drwx------  3 git  git  4096 Apr  4 10:12 .</span><br><span class="line">drwxr-xr-x. 3 root root 4096 Apr  4 09:59 ..</span><br><span class="line">-rw-r--r--  1 git  git    18 Nov 20 13:02 .bash_logout</span><br><span class="line">-rw-r--r--  1 git  git   193 Nov 20 13:02 .bash_profile</span><br><span class="line">-rw-r--r--  1 git  git   231 Nov 20 13:02 .bashrc</span><br><span class="line">drwx------  2 git  git  4096 Apr  4 13:37 .ssh</span><br><span class="line">[root@iZ28d7lnghjZ git]# cd .ssh/</span><br><span class="line">[root@iZ28d7lnghjZ .ssh]# chmod 600 authorized_keys</span><br></pre></td></tr></table></figure>
+<ul>
+<li>客户端生成id_rsa.pub文件的命令</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@git ~]# cat /home/git/.ssh/authorized_keys</span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAwMU4FKB6NRc3XSoIunWsdvVVuSoncbVb5Al6lB3ciswBVd++YmJFhqwkITNGccrO5sycROs9+Fbjgd6oBSzNuaBtCIbwNNsEyM/henTl2euI3XsnJQ/ITr6c/q0P3WoGl4E2QFQ2kZqs+1eDC0CgHcBrqvFv1Jr414sVYK9lfZwIF+jDdtaBOrSJuq1Agx9pGUFUEB4tQfkXxsWm/MvOmKAVvduKDE1eenUEL9zzyeELPcSXLe3NOoTjZhkX6EEXxQR1ZiZRFywLpfM4qopZ10to2KIUyVtzw6hx6V3cg7kn40lYVW0EAMATw9dVldwcRUI+kJzJSKUTKDVSwY3/+Q== root@CHENMINGQIAN</span><br><span class="line"></span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAsmmJuR+KhRSpdSirCiL30RA8WbfgicY1z7itWVnKHJW6hTuJFhzruY59FilVjJR1hbQBluP9JnK3XPSK9PSg+bwiJ2iQRa39rXck35r+trVOLyNbPyfKVRfOemD8YuykMlyr5JeW8gZjsHEuLnJ8//RiCiYzd3RT/SSUQ4yawDoIIWkz3eUSL09xoCRZFBsAp+S/LD3vx2MN+FNOHwvqcE+yK3oRNIqjWwLoKE0e5TRnqNgrPQ95PJYB3XPUulzaeMwsWPZs7jIUMl/5yEqSgAkioa8SVMOsikYJG/erv99NNVgFmpCBIiWqKEGkNrIpYzLLHDSYQ4g5Gbci/RZ54Q== Administrator@WIN2003X323</span><br><span class="line"></span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NwUHeNNi+PC6KlrcJrXXDmKxRMmgHIPp79sgX6zqfdSlmNj7rBPQeyEKS9Wg8yI6jd8aG2jsUx99Vjti2VK2vEXKkRHxwID7ri69gE71RfDtv6ekafnzLo14J8hAp0spMk+N3wEAQRYDmcYo1wmnm/jMBedGrHj4NJQ1vYy1hVtJasGMSzjcMrlz9qvaluWnQ5tQjKFQVVwKsRRRzs8qTvzVhLJt4NQ+CAN45tqfsRuf58Uba9QNK7/6xSUiIKXQiILz8PMGJ3MnlV+eN3wx2aeztdevxu9plggtG05SMmd8GNVzXrN1IaxXSvz0UwjQ2kygu7aCqO8AZWH49rouw== leo@LEO-PC</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：我这里有三个用户登录服务器，所以我这里就有三个ssh-rsa，大家可以看一下。</li>
+</ul>
+<h3 id="4-禁用shell登录"><a href="#4-禁用shell登录" class="headerlink" title="4. 禁用shell登录"></a>4. 禁用shell登录</h3><ul>
+<li><p>注，出于安全考虑，创建的git用户不允许登录shell，这可以通过编辑/etc/passwd文件完成。找到类似下面的一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ28d7lnghjZ ~]# cat /etc/passwd | grep git</span><br><span class="line">git:x:1000:1000:git version control:/home/git:/usr/bin/bash</span><br></pre></td></tr></table></figure>
+<p><strong>改为：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ28d7lnghjZ ~]# vim /etc/passwd</span><br><span class="line">git:x:1000:1000:git version control:/home/git:/usr/bin/git-shell</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这样，git用户可以正常通过ssh使用git，但无法登录shell，因为我们为git用户指定的git-shell每次一登录就自动退出。</p>
+</li>
+</ul>
+<h3 id="5-如以上配置不行，请注意这里"><a href="#5-如以上配置不行，请注意这里" class="headerlink" title="5. 如以上配置不行，请注意这里"></a>5. 如以上配置不行，请注意这里</h3><p> 到<code>/etc/ssh/</code>目录下查看sshd_config配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ28d7lnghjZ ~]# vim /etc/passwd/sshd_config</span><br></pre></td></tr></table></figure></p>
+<p>找到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">RSAAuthentication yes # 这行</span><br><span class="line">PubkeyAuthentication yes # 这行</span><br><span class="line"></span><br><span class="line"># The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2</span><br><span class="line"># but this is overridden so installations will only check .ssh/authorized_keys</span><br><span class="line">AuthorizedKeysFile      .ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+<ul>
+<li>看看有没有开启<code>RSAAuthentication</code>和<code>PubkeyAuthentication</code>，去掉前面的<code>#</code>，<code>AuthorizedKeysFile</code>表示公钥在服务器上的位置</li>
+</ul>
+<h3 id="6-初始化Git仓库"><a href="#6-初始化Git仓库" class="headerlink" title="6. 初始化Git仓库"></a>6. 初始化Git仓库</h3><p> 先选定一个目录作为Git仓库，假定是/srv/project.git，在/srv目录下输入命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ28d7lnghjZ git]# git init --bare project.git</span><br></pre></td></tr></table></figure></p>
+<p> 执行以上命令 Git命令，会创建一个裸仓库，裸仓库没有工作区，因为服务器上的Git仓库纯粹是为了共享，所以不让用户直接登录到服务器上去改工作区，并且服务器上的Git仓库通常都以.git结尾。然后，把owner改为git：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ28d7lnghjZ git]# chown -R git.git project.git</span><br><span class="line">[root@iZ28d7lnghjZ git]# ls -l</span><br><span class="line">[root@iZ28d7lnghjZ git]# </span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x 7 git git 4096 Apr  4 09:59 project.git</span><br></pre></td></tr></table></figure></p>
+<p> <strong>在本地clone下来</strong></p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git clone git@yourHost /srv/project.git </span><br><span class="line"># git 以git管理员访问主机</span><br><span class="line"># yourHost 你的主机名</span><br><span class="line"># /srv/project.git 项目在主机上的路径</span><br></pre></td></tr></table></figure>
+<h3 id="7-自动化部署代码"><a href="#7-自动化部署代码" class="headerlink" title="7. 自动化部署代码"></a>7. 自动化部署代码</h3><ul>
+<li>如果git服务器与web服务器是同一台机子，可以参考一下代码自动化部署</li>
+<li>代码部署不是由git服务器处理的，但是强大的git为我们提供了钩子(hooks)功能，让我们尽情发挥自己的想象</li>
+<li><p>关于hooks，这里有传送门 <a href="https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90" target="_blank" rel="external">Git Hooks</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ28d7lnghjZ ~]# cd /srv/git/baowei.git/hooks</span><br><span class="line"># 题主git服务器的仓库在/srv/git/, baowei.git为项目</span><br><span class="line"></span><br><span class="line">[root@iZ28d7lnghjZ hooks]# vim post-receive</span><br><span class="line"># 如果不存在post-receive可以通过touch post-receive命令创建，再通过chmod +x post-receive给予执行的权限，</span><br><span class="line"># post-receive 介绍: post-receive挂钩在整个过程完结以后运行，可以用来更新其他系统服务或者通知用户。它接受与 pre-receive 相同的标准输入数据。 它的用途包括给某个邮件列表发信，通知持续集成（continous integration）的服务器，或者更新问题追踪系统（ticket-tracking system） —— 甚至可以通过分析提交信息来决定某个问题（ticket）是否应该被开启，修改或者关闭。 该脚本无法终止推送进程，不过客户端在它结束运行之前将保持连接状态，所以如果你想做其他操作需谨慎使用它，因为它将耗费你很长的一段时间。</span><br><span class="line"></span><br><span class="line">#!/bin/sh</span><br><span class="line">unset GIT_DIR</span><br><span class="line">NowPath=`pwd`</span><br><span class="line">DeployPath=&quot;/var/www/html/baiwei&quot;</span><br><span class="line">ClonePath=&quot;/var/www/html/&quot;</span><br><span class="line"></span><br><span class="line"># echo &quot;Now path is :&quot;$NowPath</span><br><span class="line">echo &quot;Deploy path is :&quot;$DeployPath</span><br><span class="line"></span><br><span class="line"># 判断是否第一次部署项目，第一次直接clone，默认部署master分支</span><br><span class="line">if[ -d $DeployPath ]</span><br><span class="line">    then</span><br><span class="line">        cd $DeployPath</span><br><span class="line">        git add . -A &amp;&amp; git stash # remove local changes </span><br><span class="line">        git pull origin master # pull data from master</span><br><span class="line">    else</span><br><span class="line">        cd $ClonePath</span><br><span class="line">        git clone git@115.28.28.8:/srv/git/baowei.git</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># the follow line is also ok:</span><br><span class="line"># git add . &amp;&amp; git fetch origin &amp;&amp; git reset --hard origin/master</span><br><span class="line"></span><br><span class="line">echo &quot;Deploy Done.&quot;</span><br><span class="line">cd $NowPath</span><br><span class="line">echo &quot;It&apos;s fine.&quot;</span><br><span class="line"># --- Finished</span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注意：部署目录/var/www/html/的权限最好全部至少是770，然后项目baowei的要拥有写的功能，所有者必须与部署所用用户一致，不然会出现<code>Permission Denied</code>之类的事情，例如：我的部署用户是git，所以baowei的所有者是git可以通过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ28d7lnghjZ html]# ls -l</span><br><span class="line">total 8</span><br><span class="line">drwxr-xr-x 3 git  git  4096 Apr  5 16:18 baowei</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您的支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/pay/alipay.png" alt="Jim_Chen Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/服务器/" rel="tag">#服务器</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/03/hello-world/" rel="next" title="您好, Jim_Chen">
+                <i class="fa fa-chevron-left"></i> 您好, Jim_Chen
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/11/synchronous-blocking-asynchronous-non-blocking/" rel="prev" title="同步，异步，阻塞，非阻塞">
+                同步，异步，阻塞，非阻塞 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar/20160420.jpg"
+               alt="Jim_Chen" />
+          <p class="site-author-name" itemprop="name">Jim_Chen</p>
+          <p class="site-description motion-element" itemprop="description">Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JimChenWYU" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/JimChenPHPer" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#废话不多说，动手是关键！"><span class="nav-number">1.</span> <span class="nav-text">废话不多说，动手是关键！</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-本机创建公钥和私钥"><span class="nav-number">1.1.</span> <span class="nav-text">1. 本机创建公钥和私钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-在服务器上创建git用户"><span class="nav-number">1.2.</span> <span class="nav-text">2. 在服务器上创建git用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-服务器上录入公钥"><span class="nav-number">1.3.</span> <span class="nav-text">3. 服务器上录入公钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-禁用shell登录"><span class="nav-number">1.4.</span> <span class="nav-text">4. 禁用shell登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-如以上配置不行，请注意这里"><span class="nav-number">1.5.</span> <span class="nav-text">5. 如以上配置不行，请注意这里</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-初始化Git仓库"><span class="nav-number">1.6.</span> <span class="nav-text">6. 初始化Git仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-自动化部署代码"><span class="nav-number">1.7.</span> <span class="nav-text">7. 自动化部署代码</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jim_Chen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jimchen';
+      var disqus_identifier = '2016/05/03/learn-to-make-git-server/';
+      var disqus_title = '10分钟避坑搭建git服务器';
+      var disqus_url = 'http://blog.chenjunwu.com/2016/05/03/learn-to-make-git-server/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.html";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+  
+
+  
+
+  
+  
+</body>
+</html>

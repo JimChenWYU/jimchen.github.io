@@ -1,0 +1,893 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PHP," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jim_Chen 的小站" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="最近都在学习一个用C语言以扩展形式写成的高性能php框架，phalcon，接触了一个新概念，Dependency Injection，中文叫依赖注入，相信学习java的同学不会陌生，如今博主想聊聊自己对依赖注入的理解
+注入主题！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="phalcon的依赖注入">
+<meta property="og:url" content="http://blog.chenjunwu.com/2016/05/13/phalcon_di/index.html">
+<meta property="og:site_name" content="Jim_Chen 的小站">
+<meta property="og:description" content="最近都在学习一个用C语言以扩展形式写成的高性能php框架，phalcon，接触了一个新概念，Dependency Injection，中文叫依赖注入，相信学习java的同学不会陌生，如今博主想聊聊自己对依赖注入的理解
+注入主题！">
+<meta property="og:updated_time" content="2016-06-23T14:06:08.888Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="phalcon的依赖注入">
+<meta name="twitter:description" content="最近都在学习一个用C语言以扩展形式写成的高性能php框架，phalcon，接触了一个新概念，Dependency Injection，中文叫依赖注入，相信学习java的同学不会陌生，如今博主想聊聊自己对依赖注入的理解
+注入主题！">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> phalcon的依赖注入 | Jim_Chen 的小站 </title>
+  <!-- 自定义引入Service Worker -->
+  <script>
+    (function () {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js');
+      }
+    }())
+  </script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?847b8ae18c9ed40e9f63186ba0592e56";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Jim_Chen 的小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Walk steps step by step!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                phalcon的依赖注入
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-13T00:24:10+08:00" content="2016-05-13">
+              2016-05-13
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术类/" itemprop="url" rel="index">
+                    <span itemprop="name">技术类</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/13/phalcon_di/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/05/13/phalcon_di/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近都在学习一个用C语言以扩展形式写成的高性能php框架，phalcon，接触了一个新概念，<a href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank" rel="external">Dependency Injection</a>，中文叫依赖注入，相信学习java的同学不会陌生，如今博主想聊聊自己对依赖注入的理解</p>
+<h2 id="注入主题！"><a href="#注入主题！" class="headerlink" title="注入主题！"></a>注入主题！</h2><a id="more"></a>
+<h2 id="一、情景模拟"><a href="#一、情景模拟" class="headerlink" title="一、情景模拟"></a>一、情景模拟</h2><h3 id="1-我们开发一个组件，需要用到数据库的连接，我们可以这样做"><a href="#1-我们开发一个组件，需要用到数据库的连接，我们可以这样做" class="headerlink" title="1. 我们开发一个组件，需要用到数据库的连接，我们可以这样做"></a>1. 我们开发一个组件，需要用到数据库的连接，我们可以这样做</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Component</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">createConnect</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> \Phalcon\Db\Adapter\Pdo\Mysql(<span class="keyword">array</span>(</span><br><span class="line">			<span class="string">"host"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">			<span class="string">"username"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">			<span class="string">"password"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">			<span class="string">"dbname"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">		));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$component = <span class="keyword">new</span> Component();</span><br><span class="line">$component-&gt;createConnect();</span><br></pre></td></tr></table></figure>
+<p>这样可以完成我们的需求，但是存在这样的问题，每次都会创建一个新的数据库连接不说，我们把数据库的配置写在组件里，这样很不利于该组件的复用，因为该组件除了业务逻辑处理还与数据库连接高度耦合，我们利用该组件时不能脱离此连接，因此这样设计不切实际。</p>
+<h3 id="2-那么我们是不是可以把配置数据库放在外部连接，然后注入组件"><a href="#2-那么我们是不是可以把配置数据库放在外部连接，然后注入组件" class="headerlink" title="2. 那么我们是不是可以把配置数据库放在外部连接，然后注入组件"></a>2. 那么我们是不是可以把配置数据库放在外部连接，然后注入组件</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Component</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">protected</span> $_connection;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setConnection</span><span class="params">($connection)</span> </span>&#123;</span><br><span class="line">		$this-&gt;$_connection = $connection;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sometask</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		$connection = $this-&gt;$_connection;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//...</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$component = <span class="keyword">new</span> Component();</span><br><span class="line"></span><br><span class="line">$component-&gt;setConnection(<span class="keyword">new</span> \Phalcon\Db\Adapter\Pdo\Mysql(<span class="keyword">array</span>(</span><br><span class="line">	<span class="string">"host"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">	<span class="string">"username"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">	<span class="string">"password"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">	<span class="string">"dbname"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">)));</span><br><span class="line"></span><br><span class="line">$component-&gt;sometask();</span><br></pre></td></tr></table></figure>
+<p>貌似可以解决我们可以在外部修改数据库配置的需要，但是仍然存在不好的问题。假设我们在程序不同地方使用该组件，那么每次使用时都会新建一次数据库连接，造成资源浪费。</p>
+<h3 id="3-如果我们能够把组件的数据库连接分享就可以解决问题，就像全局注册表。"><a href="#3-如果我们能够把组件的数据库连接分享就可以解决问题，就像全局注册表。" class="headerlink" title="3. 如果我们能够把组件的数据库连接分享就可以解决问题，就像全局注册表。"></a>3. 如果我们能够把组件的数据库连接分享就可以解决问题，就像全局注册表。</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Register</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getConnection</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> \Phalcon\Db\Adapter\Pdo\Mysql(<span class="keyword">array</span>(</span><br><span class="line">			<span class="string">"host"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">			<span class="string">"username"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">			<span class="string">"password"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">			<span class="string">"dbname"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">		));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Component</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">protected</span> $_connection;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setConnection</span><span class="params">($connection)</span> </span>&#123;</span><br><span class="line">		$this-&gt;$_Connection = $connection;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sometask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		$connection = $this-&gt;$_connection;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//...</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$component = <span class="keyword">new</span> Component();</span><br><span class="line">$component-&gt;setConnection(Register::getConnection());</span><br><span class="line"></span><br><span class="line">$component-&gt;sometask();</span><br></pre></td></tr></table></figure>
+<p>于是我们可以进一步来说，在组件内部建立两种方法，一种方法可以新建一个连接，另一种是可以分享一个已有连接。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Register</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">static</span> $_connection;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">_createConnection</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> \Phalcon\Db\Adapter\Pdo\Mysql(<span class="keyword">array</span>(</span><br><span class="line">			<span class="string">"host"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">			<span class="string">"username"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">			<span class="string">"password"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">			<span class="string">"dbname"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">		));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getSharedConnection</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">self</span>::$_connection === <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">self</span>::$_connection = <span class="keyword">self</span>::_createConnection();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">self</span>::$_connection;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getNewConnection</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">self</span>::_createConnection();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Component</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">protected</span> $_connection;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setConnection</span><span class="params">($connection)</span> </span>&#123;</span><br><span class="line">		$this-&gt;_connection = $connection;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sometask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		$connection = $this-&gt;_connection;</span><br><span class="line"></span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$some = <span class="keyword">new</span> Component();</span><br><span class="line"></span><br><span class="line">$some-&gt;setConnection(Register::getSharedConnection());</span><br><span class="line"></span><br><span class="line">$some-&gt;sometask();</span><br><span class="line"></span><br><span class="line">$some-&gt;setConnection(Register::getNewConnection());</span><br></pre></td></tr></table></figure>
+<p>这样我们相当创建一个专门连接数据库的组件，与我们原先创建的组件分离，在代码外部创建依赖关系，降低耦合度。但是还存在问题，倘若我们需要用到很多依赖组件，我们就要创建很多setter或者传递很多参数给构造函数，而且每次用到组件时我们都去创建依赖组件，造成代码冗余过大。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$connection = <span class="keyword">new</span> \Phalcon\Db\Adapter\Pdo\Mysql();</span><br><span class="line">$session = <span class="keyword">new</span> Session();</span><br><span class="line">$fileSystem = <span class="keyword">new</span> FileSystem();</span><br><span class="line">$filter = <span class="keyword">new</span> Filter();</span><br><span class="line">$selector = <span class="keyword">new</span> Selector();</span><br><span class="line"></span><br><span class="line">$sometask = <span class="keyword">new</span> SomeComponent(</span><br><span class="line">	$connection, $session, $fileSystem, $filter, $selector</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">//或者这样</span></span><br><span class="line">$sometask-&gt;setConnection($connection);</span><br><span class="line">$sometask-&gt;setSession($session);</span><br><span class="line">$sometask-&gt;setFileSystem($fileSystem);</span><br><span class="line">$sometask-&gt;setFilter($filter);</span><br><span class="line">$sometask-&gt;setSelector($selector);</span><br></pre></td></tr></table></figure>
+<p>于是我们就有了使用容器的依赖注入，phalcon就有了di的组件完成我们的工作</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Component</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">protected</span> $_di;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($di)</span> </span>&#123;</span><br><span class="line">		$this-&gt;_di = $di;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sometask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		$connection = $this-&gt;_di-&gt;get(<span class="string">'db'</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">someOthertask</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		$connection = $this-&gt;_di-&gt;get(<span class="string">'db'</span>);</span><br><span class="line"></span><br><span class="line">	 	$filter = $this-&gt;_di-&gt;get(<span class="string">'filter'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$di = <span class="keyword">new</span> Phalcon\DI();</span><br><span class="line"></span><br><span class="line"><span class="comment">//向容器注册一个db服务</span></span><br><span class="line">$di-&gt;set(<span class="string">'db'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> \Phalcon\Db\Adapter\Pdo\Mysql(<span class="keyword">array</span>(</span><br><span class="line">		<span class="string">"host"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">        <span class="string">"username"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">        <span class="string">"password"</span> =&gt; <span class="string">"..."</span>,</span><br><span class="line">        <span class="string">"dbname"</span> =&gt; <span class="string">"..."</span></span><br><span class="line">	));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//向容器注册一个filter服务</span></span><br><span class="line">$di-&gt;set(<span class="string">'filter'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> Filter();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$component = <span class="keyword">new</span> Component($di);</span><br><span class="line"></span><br><span class="line">$component-&gt;sometask();</span><br></pre></td></tr></table></figure>
+<p>我们把需要用到的服务预先注册到容器中，然后通过构造函数把容器注入到我们的组件中，而且，当我们组件内部用到服务时才会初始化服务，大大减少不必要资源的开销，而且di组件与我们的组件是高度解耦，di组件行为不会影响我们组件本身。</p>
+<p>如果你觉得这样配置数据库，认为外部改变实例化的参数而不该注册服务很困难：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Phalcon</span>\<span class="title">Db</span>\<span class="title">Adapter</span>\<span class="title">Pdo</span>\<span class="title">Mysql</span> <span class="title">as</span> <span class="title">PdoMysql</span>;</span><br><span class="line"></span><br><span class="line">$di-&gt;set(<span class="string">'db'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> <span class="title">use</span><span class="params">($config)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> PdoMysql(<span class="keyword">array</span>(</span><br><span class="line">		<span class="string">"host"</span> =&gt; $config-&gt;host,</span><br><span class="line">        <span class="string">"username"</span> =&gt; $config-&gt;username,</span><br><span class="line">        <span class="string">"password"</span> =&gt; $config-&gt;password,</span><br><span class="line">        <span class="string">"dbname"</span> =&gt; $config-&gt;dbname</span><br><span class="line">	));</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这样当你写好配置文件映射成一个对象，通过关键字use引入匿名函数内部进行配置。</p>
+<h2 id="二、Phalcon-DI组件"><a href="#二、Phalcon-DI组件" class="headerlink" title="二、Phalcon\DI组件"></a>二、Phalcon\DI组件</h2><h3 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1. 介绍"></a>1. 介绍</h3><p>Phalcon\DI是一个实现服务的依赖注入功能的组件，它本身也是一个容器。</p>
+<p>由于Phalcon高度解耦，Phalcon\DI 是框架用来集成其他组件的必不可少的部分，开发人员也可以使用这个组件依赖注入和管理应用程序中不同类文件的实例。</p>
+<p>基本上，这个组件实现了 Inversion of Control 模式。基于此，对象不再以构造函数接收参数或者使用setter的方式来实现注入，而是直接请求服务的依赖注入。这就大大降低了整体程序的复杂性，因为只有一个方法用以获得所需要的一个组件的依赖关系。</p>
+<p>此外，这种模式增强了代码的可测试性，从而使它不容易出错。</p>
+<p>参考: <a href="https://docs.phalconphp.com/zh/reference/di.html#id3" target="_blank" rel="external">phalcon中文网</a></p>
+<h2 id="三、容器中注册服务"><a href="#三、容器中注册服务" class="headerlink" title="三、容器中注册服务"></a>三、容器中注册服务</h2><h3 id="1-框架本身或者我们本身都可以向容器注册服务，这种方式的优点总结一下就是"><a href="#1-框架本身或者我们本身都可以向容器注册服务，这种方式的优点总结一下就是" class="headerlink" title="1. 框架本身或者我们本身都可以向容器注册服务，这种方式的优点总结一下就是:"></a>1. 框架本身或者我们本身都可以向容器注册服务，这种方式的优点总结一下就是:</h3><blockquote>
+<p>A. 我们可以更换一个组件，从他们本身或者第三方轻松创建。<br>B. 在组件发布之前，我们可以充分的控制对象的初始化，并对对象进行各种设置。<br>C. 我们可以使用统一的方式从组件得到一个结构化的全局实例</p>
+</blockquote>
+<p>我们注册服务有几种方式:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建注入容器</span></span><br><span class="line">$di = <span class="keyword">new</span> Phalcon\DI();</span><br><span class="line"></span><br><span class="line"><span class="comment">//1. 类名注入</span></span><br><span class="line">$di-&gt;set(<span class="string">"request"</span>, <span class="string">"Phalcon\Http\Request"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//2. 匿名函数注入</span></span><br><span class="line">$di-&gt;set(<span class="string">"request"</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> Phalcon\Http\Request();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//3. 直接创建对象注入</span></span><br><span class="line">$di-&gt;set(<span class="string">"request"</span>, <span class="keyword">new</span> Phalcon\Http\Request());</span><br><span class="line"></span><br><span class="line"><span class="comment">//4. 数组方式注入，好处：不用实例化/解析服务，就可以改变定义服务</span></span><br><span class="line">$di-&gt;set(<span class="string">"request"</span>, <span class="keyword">array</span>(</span><br><span class="line"></span><br><span class="line">	<span class="string">"className"</span> =&gt; <span class="string">"Phalcon\Http\Request"</span></span><br><span class="line">));</span><br></pre></td></tr></table></figure>
+<p>以上四种方式都会向$di容器注入”request”服务，像以类名字符串注入，方便但缺乏灵活性，数组就相反，而匿名函数是综合两者，一般很少直接创建对象注入，这样会导致di组件不能提供延迟加载，有可能浪费空间资源，因为延迟加载可以让服务被需要时才初始化。</p>
+<h3 id="2-Phalcon-DI用法"><a href="#2-Phalcon-DI用法" class="headerlink" title="2. Phalcon\DI用法"></a>2. Phalcon\DI用法</h3><h4 id="从容器得到获取一个服务是一件简单的事情，只要通过“get”方法就可以。这将返回一个服务的新实例："><a href="#从容器得到获取一个服务是一件简单的事情，只要通过“get”方法就可以。这将返回一个服务的新实例：" class="headerlink" title="从容器得到获取一个服务是一件简单的事情，只要通过“get”方法就可以。这将返回一个服务的新实例："></a>从容器得到获取一个服务是一件简单的事情，只要通过“get”方法就可以。这将返回一个服务的新实例：</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$request = $di-&gt;get(<span class="string">"request"</span>);</span><br></pre></td></tr></table></figure>
+<p>或者魔术方法获取</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$request = $di-&gt;getRequest();</span><br></pre></td></tr></table></figure>
+<p>又或者数组的方式获取<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$request = $di[<span class="string">'request'</span>];</span><br></pre></td></tr></table></figure></p>
+<p>参数可以传递到构造函数中，通过添加一个数组的参数到get方法中：(过于复杂)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回new MyComponent("some-parameter", "other");</span></span><br><span class="line">$component = $di-&gt;get(<span class="string">"MyComponent"</span>, <span class="keyword">array</span>(<span class="string">"some-parameter"</span>, <span class="string">"other"</span>));</span><br></pre></td></tr></table></figure>
+<h4 id="共享服务"><a href="#共享服务" class="headerlink" title="共享服务"></a>共享服务</h4><p>当服务注册成“shared”类型服务时，意味着这个服务将使用【单例模式】，即服务只有一个实例并能被重复使用</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Phalcon</span>\<span class="title">Session</span>\<span class="title">Adapter</span>\<span class="title">Files</span> <span class="title">as</span> <span class="title">SessionFiles</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把session服务注册成“shared”类型</span></span><br><span class="line">$di-&gt;setShared(<span class="string">'session'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $session = <span class="keyword">new</span> SessionFiles();</span><br><span class="line">    $session-&gt;start();</span><br><span class="line">    <span class="keyword">return</span> $session;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//第二种实现“shared”类型</span></span><br><span class="line"><span class="comment">// 把session服务注册成“shared”类型</span></span><br><span class="line">$di-&gt;set(<span class="string">'session'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$session = $di-&gt;get(<span class="string">'session'</span>); <span class="comment">// 第一次获取session服务时，session服务将实例化</span></span><br><span class="line">$session = $di-&gt;getSession();   <span class="comment">// 第二次获取时，不再实例化，直接返回第一次实例化的对象</span></span><br></pre></td></tr></table></figure>
+<p>倘若不想注册“shared”也可以运用DI组件的getShared方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$request = $di-&gt;getShared(<span class="string">"request"</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="通过服务容器实例化类"><a href="#通过服务容器实例化类" class="headerlink" title="通过服务容器实例化类"></a>通过服务容器实例化类</h4><p>当你向服务容器中请求一个服务，如果找不到服务，容器会尝试加载以这个服务为名称的类，这个类的一个实例</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 把一个控制器注册为服务</span></span><br><span class="line">$di-&gt;set(<span class="string">'IndexController'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $component = <span class="keyword">new</span> Component();</span><br><span class="line">    <span class="keyword">return</span> $component;</span><br><span class="line">&#125;, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把一个控制器注册为服务</span></span><br><span class="line">$di-&gt;set(<span class="string">'MyOtherComponent'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 实际上返回另外一个组件</span></span><br><span class="line">    $component = <span class="keyword">new</span> AnotherComponent();</span><br><span class="line">    <span class="keyword">return</span> $component;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取通过服务容器创建的对象</span></span><br><span class="line">$myComponent = $di-&gt;get(<span class="string">'MyOtherComponent'</span>);</span><br></pre></td></tr></table></figure>
+<p>这样的做的好处是把DI组件当作一个类的自动加载器，只要注入了DI容器，那么你可以自由在任意地方切换任意类来获取它的一个实例化对象</p>
+<h4 id="如果你自定义的组件需要用到DI组件时，可以通过实现Phalcon-Di-InjectionAwareInterface接口，这样就可以在实例化这个类的对象时自动注入DI的服务"><a href="#如果你自定义的组件需要用到DI组件时，可以通过实现Phalcon-Di-InjectionAwareInterface接口，这样就可以在实例化这个类的对象时自动注入DI的服务" class="headerlink" title="如果你自定义的组件需要用到DI组件时，可以通过实现Phalcon\Di\InjectionAwareInterface接口，这样就可以在实例化这个类的对象时自动注入DI的服务"></a>如果你自定义的组件需要用到DI组件时，可以通过实现<a href="https://docs.phalconphp.com/zh/latest/api/Phalcon_Di_InjectionAwareInterface.html" target="_blank" rel="external">Phalcon\Di\InjectionAwareInterface</a>接口，这样就可以在实例化这个类的对象时自动注入DI的服务</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Component</span> <span class="keyword">implements</span> <span class="title">InjectionAwardInterFace</span></span><br><span class="line"></span>&#123;</span><br><span class="line"> 	<span class="keyword">protected</span> $_di;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setDi</span><span class="params">($di)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        $this-&gt;_di = $di;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getDi</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $this-&gt;_di;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>按照上面这样，一旦服务被解析，$di对象将自动传递到setDi()方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 注册服务</span></span><br><span class="line">$di-&gt;set(<span class="string">'myClass'</span>, <span class="string">'MyClass'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解析服务（注意：将自动调用$myClass-&gt;setDi($di)方法）</span></span><br><span class="line">$myClass = $di-&gt;get(<span class="string">'myClass'</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="默认工厂-Factory-Default-DI"><a href="#默认工厂-Factory-Default-DI" class="headerlink" title="默认工厂(Factory Default DI)"></a>默认工厂(Factory Default DI)</h4><p>phalcon里提供一种DI变种的组件，叫<a href="https://docs.phalconphp.com/zh/latest/api/Phalcon_Di_FactoryDefault.html" target="_blank" rel="external">Phalcon\Di\FactoryDefault</a>。这个组件本身就注册相应常用的服务，可以创获得这个组件的一个实例进行操作。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Phalcon</span>\<span class="title">Di</span>\<span class="title">FactoryDefault</span>;</span><br><span class="line"></span><br><span class="line">$di = <span class="keyword">new</span> FactoryDefault();</span><br></pre></td></tr></table></figure>
+<h4 id="自定义注入器-一般很少需要自己创建注入器"><a href="#自定义注入器-一般很少需要自己创建注入器" class="headerlink" title="自定义注入器(一般很少需要自己创建注入器)"></a>自定义注入器(一般很少需要自己创建注入器)</h4><p>如果你要创建一个自定义注入器或者继承一个已有的，接口<a href="https://docs.phalconphp.com/zh/latest/api/Phalcon_DiInterface.html" target="_blank" rel="external">Phalcon\DiInterface</a> 必须被实现。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您的支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/pay/alipay.png" alt="Jim_Chen Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PHP/" rel="tag">#PHP</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/11/thinkphp/" rel="next" title="Thinkphp">
+                <i class="fa fa-chevron-left"></i> Thinkphp
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/06/UEditor/" rel="prev" title="UEditor使用">
+                UEditor使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar/20160420.jpg"
+               alt="Jim_Chen" />
+          <p class="site-author-name" itemprop="name">Jim_Chen</p>
+          <p class="site-description motion-element" itemprop="description">Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JimChenWYU" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/JimChenPHPer" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#注入主题！"><span class="nav-number">1.</span> <span class="nav-text">注入主题！</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、情景模拟"><span class="nav-number">2.</span> <span class="nav-text">一、情景模拟</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-我们开发一个组件，需要用到数据库的连接，我们可以这样做"><span class="nav-number">2.1.</span> <span class="nav-text">1. 我们开发一个组件，需要用到数据库的连接，我们可以这样做</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-那么我们是不是可以把配置数据库放在外部连接，然后注入组件"><span class="nav-number">2.2.</span> <span class="nav-text">2. 那么我们是不是可以把配置数据库放在外部连接，然后注入组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-如果我们能够把组件的数据库连接分享就可以解决问题，就像全局注册表。"><span class="nav-number">2.3.</span> <span class="nav-text">3. 如果我们能够把组件的数据库连接分享就可以解决问题，就像全局注册表。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Phalcon-DI组件"><span class="nav-number">3.</span> <span class="nav-text">二、Phalcon\DI组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-介绍"><span class="nav-number">3.1.</span> <span class="nav-text">1. 介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、容器中注册服务"><span class="nav-number">4.</span> <span class="nav-text">三、容器中注册服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-框架本身或者我们本身都可以向容器注册服务，这种方式的优点总结一下就是"><span class="nav-number">4.1.</span> <span class="nav-text">1. 框架本身或者我们本身都可以向容器注册服务，这种方式的优点总结一下就是:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Phalcon-DI用法"><span class="nav-number">4.2.</span> <span class="nav-text">2. Phalcon\DI用法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#从容器得到获取一个服务是一件简单的事情，只要通过“get”方法就可以。这将返回一个服务的新实例："><span class="nav-number">4.2.1.</span> <span class="nav-text">从容器得到获取一个服务是一件简单的事情，只要通过“get”方法就可以。这将返回一个服务的新实例：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#共享服务"><span class="nav-number">4.2.2.</span> <span class="nav-text">共享服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过服务容器实例化类"><span class="nav-number">4.2.3.</span> <span class="nav-text">通过服务容器实例化类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如果你自定义的组件需要用到DI组件时，可以通过实现Phalcon-Di-InjectionAwareInterface接口，这样就可以在实例化这个类的对象时自动注入DI的服务"><span class="nav-number">4.2.4.</span> <span class="nav-text">如果你自定义的组件需要用到DI组件时，可以通过实现Phalcon\Di\InjectionAwareInterface接口，这样就可以在实例化这个类的对象时自动注入DI的服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#默认工厂-Factory-Default-DI"><span class="nav-number">4.2.5.</span> <span class="nav-text">默认工厂(Factory Default DI)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义注入器-一般很少需要自己创建注入器"><span class="nav-number">4.2.6.</span> <span class="nav-text">自定义注入器(一般很少需要自己创建注入器)</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jim_Chen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jimchen';
+      var disqus_identifier = '2016/05/13/phalcon_di/';
+      var disqus_title = 'phalcon的依赖注入';
+      var disqus_url = 'http://blog.chenjunwu.com/2016/05/13/phalcon_di/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.html";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+  
+
+  
+
+  
+  
+</body>
+</html>

@@ -1,0 +1,872 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jim_Chen 的小站" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="最近爱上了AngularJS这个前端框架，上手快，而且设计思想前卫，完全不同于JQuery开发模式，而且引入了后端开发依赖注入的优秀思想，十分出色的框架让人深深感受到JavaScript语言的魅力，而且AngularJS的模块化，双向数据绑定等特性相当出色，而且在客户端还有不俗的效率，而现在我想说说AngularJS里头比较神奇的服务$q
+Hello AngularJS!">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于AngularJS的$q">
+<meta property="og:url" content="http://blog.chenjunwu.com/2016/08/06/q-AngularJS/index.html">
+<meta property="og:site_name" content="Jim_Chen 的小站">
+<meta property="og:description" content="最近爱上了AngularJS这个前端框架，上手快，而且设计思想前卫，完全不同于JQuery开发模式，而且引入了后端开发依赖注入的优秀思想，十分出色的框架让人深深感受到JavaScript语言的魅力，而且AngularJS的模块化，双向数据绑定等特性相当出色，而且在客户端还有不俗的效率，而现在我想说说AngularJS里头比较神奇的服务$q
+Hello AngularJS!">
+<meta property="og:image" content="http://blog.chenjunwu.com/images/asset/2016/2016-08-06_747.png">
+<meta property="og:updated_time" content="2016-08-08T06:34:56.432Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于AngularJS的$q">
+<meta name="twitter:description" content="最近爱上了AngularJS这个前端框架，上手快，而且设计思想前卫，完全不同于JQuery开发模式，而且引入了后端开发依赖注入的优秀思想，十分出色的框架让人深深感受到JavaScript语言的魅力，而且AngularJS的模块化，双向数据绑定等特性相当出色，而且在客户端还有不俗的效率，而现在我想说说AngularJS里头比较神奇的服务$q
+Hello AngularJS!">
+<meta name="twitter:image" content="http://blog.chenjunwu.com/images/asset/2016/2016-08-06_747.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 关于AngularJS的$q | Jim_Chen 的小站 </title>
+  <!-- 自定义引入Service Worker -->
+  <script>
+    (function () {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js');
+      }
+    }())
+  </script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?847b8ae18c9ed40e9f63186ba0592e56";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Jim_Chen 的小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Walk steps step by step!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                关于AngularJS的$q
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-06T15:26:21+08:00" content="2016-08-06">
+              2016-08-06
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术类/" itemprop="url" rel="index">
+                    <span itemprop="name">技术类</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/06/q-AngularJS/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/06/q-AngularJS/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近爱上了AngularJS这个前端框架，上手快，而且设计思想前卫，完全不同于JQuery开发模式，而且引入了后端开发依赖注入的优秀思想，十分出色的框架让人深深感受到JavaScript语言的魅力，而且AngularJS的模块化，双向数据绑定等特性相当出色，而且在客户端还有不俗的效率，而现在我想说说AngularJS里头比较神奇的服务<code>$q</code></p>
+<h2 id="Hello-AngularJS"><a href="#Hello-AngularJS" class="headerlink" title="Hello AngularJS!"></a>Hello AngularJS!</h2><a id="more"></a>
+<h2 id="一、什么是服务呢？"><a href="#一、什么是服务呢？" class="headerlink" title="一、什么是服务呢？"></a>一、什么是服务呢？</h2><p><strong>概念：</strong>在Angular中，服务会是一个函数或者对象，允许你通过依赖注入的方式注入到需要用到服务Angular应用中，Angular内置许多服务例如，数据绑定的$scope与$rootScope，关于http通信服务的$http, $resource等等, 当然Angular允许我们自定义我们的服务，直接调用Angular设计好的API, provider,factory或service来创建我们的服务 <a href="https://segmentfault.com/a/1190000003096933" target="_blank" rel="external"><strong>三者区别点击这里</strong></a></p>
+<h2 id="二、什么是-q"><a href="#二、什么是-q" class="headerlink" title="二、什么是$q"></a>二、什么是$q</h2><p><strong>概念：</strong>$q 是Angular内置的众多服务之一，这是一个能帮助你异步地运行函数，并且在他们仍在进程中的时候使用他们的返回值（或者捕捉异常）的服务</p>
+<h2 id="三、-q的使用"><a href="#三、-q的使用" class="headerlink" title="三、$q的使用"></a>三、$q的使用</h2><h3 id="1-观看下面例子："><a href="#1-观看下面例子：" class="headerlink" title="1. 观看下面例子："></a>1. 观看下面例子：</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 此例中，我们假设变量`$ q`和`okToGreet`已经存在于当前作用域</span></span><br><span class="line"><span class="comment">// 他们可以通过依赖注入和传递参数来获取</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asyncGreet</span>(<span class="params">name</span>) </span>&#123; </span><br><span class="line">  <span class="comment">// 执行一些异步操作</span></span><br><span class="line">  <span class="comment">// 适当的时候解析(resolve)或者阻止(reject) Promise. </span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> $q(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123; </span><br><span class="line"></span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (okToGreet(name)) &#123; </span><br><span class="line">        resolve(<span class="string">'Hello, '</span> + name + <span class="string">'!'</span>); </span><br><span class="line">      &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">        reject(<span class="string">'Greeting '</span> + name + <span class="string">' is not allowed.'</span>);</span><br><span class="line">      &#125; </span><br><span class="line"></span><br><span class="line">    &#125;, <span class="number">1000</span>); </span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> promise = asyncGreet(<span class="string">'Robin Hood'</span>);</span><br><span class="line"></span><br><span class="line">promise.then(<span class="function"><span class="keyword">function</span>(<span class="params">greeting</span>) </span>&#123; </span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Success: '</span> + greeting);</span><br><span class="line"></span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span>(<span class="params">reason</span>) </span>&#123; </span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Failed: '</span> + reason);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="2-在函数asyncGreet中，我们直接向-q中传入一个函数，那么我们从源码v1-4-12分析，我们定位到angular-js文件下的-Q"><a href="#2-在函数asyncGreet中，我们直接向-q中传入一个函数，那么我们从源码v1-4-12分析，我们定位到angular-js文件下的-Q" class="headerlink" title="2. 在函数asyncGreet中，我们直接向$q中传入一个函数，那么我们从源码v1.4.12分析，我们定位到angular.js文件下的 $Q"></a>2. 在函数asyncGreet中，我们直接向$q中传入一个函数，那么我们从<a href="https://code.angularjs.org/1.4.12/angular.js" target="_blank" rel="external">源码v1.4.12</a>分析，我们定位到angular.js文件下的 <code>$Q</code></h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> $Q = <span class="function"><span class="keyword">function</span> <span class="title">Q</span>(<span class="params">resolver</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 工具函数isFunction(), 判断传入参数是否是函数, 不是就会抛出异常</span></span><br><span class="line">    <span class="keyword">if</span> (!isFunction(resolver)) &#123;</span><br><span class="line">      <span class="keyword">throw</span> $qMinErr(<span class="string">'norslvr'</span>, <span class="string">"Expected resolverFn, got '&#123;0&#125;'"</span>, resolver);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 允许直接调用构造函数进行创建新对象</span></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 然后return deferred.promise可以把deferred.promise对象的引用</span><br><span class="line">     * 赋值给创建的对象引用</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">if</span> (!(<span class="keyword">this</span> <span class="keyword">instanceof</span> Q)) &#123;</span><br><span class="line">      <span class="comment">// More useful when $Q is the Promise itself.</span></span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> Q(resolver);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个deferred对象，类似于promise</span></span><br><span class="line">    <span class="keyword">var</span> deferred = <span class="keyword">new</span> Deferred();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//以下两个函数都是私有的工具函数，分别用来初始化deferred对象里成功与失败的响应</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">resolveFn</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">      deferred.resolve(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">rejectFn</span>(<span class="params">reason</span>) </span>&#123;</span><br><span class="line">      deferred.reject(reason);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//向传入函数传入两个工具函数允许调用时进行初始化</span></span><br><span class="line">    resolver(resolveFn, rejectFn);</span><br><span class="line">    <span class="comment">// 返回 deferred 里的promise对象</span></span><br><span class="line">    <span class="keyword">return</span> deferred.promise;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="3-所以我们找到例子中这段代码"><a href="#3-所以我们找到例子中这段代码" class="headerlink" title="3. 所以我们找到例子中这段代码"></a>3. 所以我们找到例子中这段代码</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asyncGreet</span>(<span class="params">name</span>) </span>&#123; </span><br><span class="line">  <span class="comment">// 执行一些异步操作</span></span><br><span class="line">  <span class="comment">// 适当的时候解析(resolve)或者阻止(reject) Promise. </span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// function(resolve, reject) 即为源码中的resolver函数，</span></span><br><span class="line">  <span class="comment">//我们可以获得工具函数返回deferred对象的resolve和reject函数自定义配置信息，</span></span><br><span class="line">  <span class="comment">//最后从`$Q`返回deferred.promise可见，$q()会得到一个promise对象</span></span><br><span class="line">  <span class="keyword">return</span> $q(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123; </span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">      <span class="keyword">if</span> (okToGreet(name)) &#123; </span><br><span class="line">        resolve(<span class="string">'Hello, '</span> + name + <span class="string">'!'</span>); </span><br><span class="line">      &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">        reject(<span class="string">'Greeting '</span> + name + <span class="string">' is not allowed.'</span>);</span><br><span class="line">      &#125; </span><br><span class="line">    &#125;, <span class="number">1000</span>); </span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因此当我们调用asyncGreet函数时，返回值就是一个promise对象，因此我们的变量promise就可以直接调用promise对象的then方法进行操作，实现ES6规范中promises</p>
+<h3 id="4-进一步分析源代码"><a href="#4-进一步分析源代码" class="headerlink" title="4. 进一步分析源代码"></a>4. 进一步分析源代码</h3><p>我们在 <code>$Q</code> 中找到 <code>Deferred</code> ,我们定位到 <code>Deferred</code> 中</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Deferred</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 我们看这里，找到promise对象</span></span><br><span class="line">    <span class="keyword">this</span>.promise = <span class="keyword">new</span> <span class="built_in">Promise</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 下面simpleBind函数是对this指向改变</span></span><br><span class="line">    <span class="comment">//Necessary to support unbound execution :/</span></span><br><span class="line">    <span class="keyword">this</span>.resolve = simpleBind(<span class="keyword">this</span>, <span class="keyword">this</span>.resolve);</span><br><span class="line">    <span class="keyword">this</span>.reject = simpleBind(<span class="keyword">this</span>, <span class="keyword">this</span>.reject);</span><br><span class="line">    <span class="keyword">this</span>.notify = simpleBind(<span class="keyword">this</span>, <span class="keyword">this</span>.notify);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>继续找Promise构造方法<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Promise</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.$$state = &#123; status: <span class="number">0</span> &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/asset/2016/2016-08-06_747.png" alt="console"></p>
+<p>于是我们找到<code>$q(fn)</code>的返回对象，至于其他属性或方法追溯源代码查看即可</p>
+<h3 id="5-我们再看一个例子"><a href="#5-我们再看一个例子" class="headerlink" title="5. 我们再看一个例子"></a>5. 我们再看一个例子</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asyncGreet</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 我们聚焦这里，直接调用$q.defer()方法</span></span><br><span class="line">  <span class="keyword">var</span> deferred = $q.defer();</span><br><span class="line"></span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    deferred.notify(<span class="string">'About to greet '</span> + name + <span class="string">'.'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (okToGreet(name)) &#123;</span><br><span class="line">      deferred.resolve(<span class="string">'Hello, '</span> + name + <span class="string">'!'</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      deferred.reject(<span class="string">'Greeting '</span> + name + <span class="string">' is not allowed.'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;, <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> deferred.promise;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实在刚刚展示源代码<code>$Q</code>方法下面我们看到</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$Q.defer = defer;</span><br><span class="line">$Q.reject = reject;</span><br><span class="line">$Q.when = when;</span><br><span class="line">$Q.resolve = resolve;</span><br><span class="line">$Q.all = all;</span><br></pre></td></tr></table></figure>
+<p>是对<code>$Q</code>进行绑定属性和方法，我们继续追溯到外层的函数可以看到</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">qFactory</span>(<span class="params">nextTick, exceptionHandler</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 只截取部分源代码</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// defer方法</span></span><br><span class="line">    <span class="keyword">var</span> defer = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> Deferred();</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">var</span> $Q = <span class="function"><span class="keyword">function</span> <span class="title">Q</span>(<span class="params">resolver</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 省略...</span></span><br><span class="line">        <span class="keyword">return</span> deferred.promise;</span><br><span class="line">    &#125;;</span><br><span class="line">    $Q.defer = defer;</span><br><span class="line">    $Q.reject = reject;</span><br><span class="line">    $Q.when = when;</span><br><span class="line">    $Q.resolve = resolve;</span><br><span class="line">    $Q.all = all;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $Q;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以当我们直接调用<code>$q.defer()</code>方法时也可以创建一个包含promise对象的deferred对象，而且这个deferred对象向我们公开reject与resolve方法，所以通过这个deferred对象来配置我们的reject与resolve方法，最后自行返回这个deferred对象里的promise对象即可。</p>
+<h3 id="6-神奇依旧继续"><a href="#6-神奇依旧继续" class="headerlink" title="6. 神奇依旧继续"></a>6. 神奇依旧继续</h3><p>我们来观察一下 <code>$q.resolve()</code> 与 <code>$q.reject()</code> 方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reject = <span class="function"><span class="keyword">function</span>(<span class="params">reason</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> Deferred();</span><br><span class="line">    result.reject(reason);</span><br><span class="line">    <span class="keyword">return</span> result.promise;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> when = <span class="function"><span class="keyword">function</span>(<span class="params">value, callback, errback, progressBack</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> Deferred();</span><br><span class="line">    result.resolve(value);</span><br><span class="line">    <span class="keyword">return</span> result.promise.then(callback, errback, progressBack);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> resolve = when;</span><br></pre></td></tr></table></figure>
+<p>从源码我们很容易知道，当我们直接使用服务<code>$q</code>调用resolve与reject时，它也是创建了一个deferred对象，然后从deferred对象检索出promise对象返回，所以我们的<code>$q.resolve()</code> 与 <code>$q.reject()</code>的返回值均是一个promise对象，这样子的话，我们可以利用这样的特性写出一套异步编程的异常处理，相当实现了<code>try-catch-throw</code>的异步模式( promise API 或者 deferred API 都是异步的 )</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">var app = angular.module(&apos;myApp&apos;, []);</span><br><span class="line">app.factory(&apos;asyncExceptionHandler&apos;,[&apos;$q&apos;, </span><br><span class="line">    function($q) &#123;</span><br><span class="line">        return function() &#123;</span><br><span class="line">            // ...</span><br><span class="line">            if(...) &#123;</span><br><span class="line">                // ...</span><br><span class="line">                return $q.resolve(&quot;success&quot;);</span><br><span class="line">            &#125;else &#123;</span><br><span class="line">                // 异常处理或者返回</span><br><span class="line">                return $q.reject(&quot;fail&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]);</span><br><span class="line"></span><br><span class="line">app.controller(&apos;exceptionCtrl&apos;, [&apos;asyncExceptionHandler&apos;, </span><br><span class="line">    function(asyncExceptionHandler) &#123;</span><br><span class="line">        var promise = asyncExceptionHandler();</span><br><span class="line">        promise</span><br><span class="line">            .then(function(success) &#123;</span><br><span class="line">                console.log(success)   //&quot;success&quot;</span><br><span class="line">                // success handler</span><br><span class="line">            &#125;, function(fail) &#123;</span><br><span class="line">                console.log(fail)   //&quot;fail&quot;</span><br><span class="line">                // fail handler</span><br><span class="line">            &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+<p>最终从源码的角度分析了AngularJS中<code>$q</code>的作用以及分析其API的特征和使用技巧，其中还有涉及的很大部分源码可以自行查阅，看懂关键代码及思想即可把AngularJS的核心思想掌握。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您的支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/pay/alipay.png" alt="Jim_Chen Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag">#前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/23/java-interface-callback/" rel="next" title="接口回调">
+                <i class="fa fa-chevron-left"></i> 接口回调
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/08/$watch-$apply-$digest/" rel="prev" title="$watch, $apply, $digest的关系">
+                $watch, $apply, $digest的关系 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar/20160420.jpg"
+               alt="Jim_Chen" />
+          <p class="site-author-name" itemprop="name">Jim_Chen</p>
+          <p class="site-description motion-element" itemprop="description">Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JimChenWYU" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/JimChenPHPer" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hello-AngularJS"><span class="nav-number">1.</span> <span class="nav-text">Hello AngularJS!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、什么是服务呢？"><span class="nav-number">2.</span> <span class="nav-text">一、什么是服务呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、什么是-q"><span class="nav-number">3.</span> <span class="nav-text">二、什么是$q</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、-q的使用"><span class="nav-number">4.</span> <span class="nav-text">三、$q的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-观看下面例子："><span class="nav-number">4.1.</span> <span class="nav-text">1. 观看下面例子：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-在函数asyncGreet中，我们直接向-q中传入一个函数，那么我们从源码v1-4-12分析，我们定位到angular-js文件下的-Q"><span class="nav-number">4.2.</span> <span class="nav-text">2. 在函数asyncGreet中，我们直接向$q中传入一个函数，那么我们从源码v1.4.12分析，我们定位到angular.js文件下的 $Q</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-所以我们找到例子中这段代码"><span class="nav-number">4.3.</span> <span class="nav-text">3. 所以我们找到例子中这段代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-进一步分析源代码"><span class="nav-number">4.4.</span> <span class="nav-text">4. 进一步分析源代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-我们再看一个例子"><span class="nav-number">4.5.</span> <span class="nav-text">5. 我们再看一个例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-神奇依旧继续"><span class="nav-number">4.6.</span> <span class="nav-text">6. 神奇依旧继续</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jim_Chen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jimchen';
+      var disqus_identifier = '2016/08/06/q-AngularJS/';
+      var disqus_title = '关于AngularJS的$q';
+      var disqus_url = 'http://blog.chenjunwu.com/2016/08/06/q-AngularJS/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.html";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+  
+
+  
+
+  
+  
+</body>
+</html>

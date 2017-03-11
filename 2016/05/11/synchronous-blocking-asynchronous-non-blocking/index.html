@@ -1,0 +1,889 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编程概念," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jim_Chen 的小站" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="博主想谈谈自己对于同步，异步，阻塞，非阻塞四个概念认识和理解，语言以JavaScript为基础展开谈论，初学，有错纠正。
+开始啦！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="同步，异步，阻塞，非阻塞">
+<meta property="og:url" content="http://blog.chenjunwu.com/2016/05/11/synchronous-blocking-asynchronous-non-blocking/index.html">
+<meta property="og:site_name" content="Jim_Chen 的小站">
+<meta property="og:description" content="博主想谈谈自己对于同步，异步，阻塞，非阻塞四个概念认识和理解，语言以JavaScript为基础展开谈论，初学，有错纠正。
+开始啦！">
+<meta property="og:updated_time" content="2016-06-23T02:31:47.160Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="同步，异步，阻塞，非阻塞">
+<meta name="twitter:description" content="博主想谈谈自己对于同步，异步，阻塞，非阻塞四个概念认识和理解，语言以JavaScript为基础展开谈论，初学，有错纠正。
+开始啦！">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 同步，异步，阻塞，非阻塞 | Jim_Chen 的小站 </title>
+  <!-- 自定义引入Service Worker -->
+  <script>
+    (function () {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js');
+      }
+    }())
+  </script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?847b8ae18c9ed40e9f63186ba0592e56";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Jim_Chen 的小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Walk steps step by step!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                同步，异步，阻塞，非阻塞
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-11T09:32:51+08:00" content="2016-05-11">
+              2016-05-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术类/" itemprop="url" rel="index">
+                    <span itemprop="name">技术类</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/11/synchronous-blocking-asynchronous-non-blocking/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/05/11/synchronous-blocking-asynchronous-non-blocking/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>博主想谈谈自己对于同步，异步，阻塞，非阻塞四个概念认识和理解，语言以JavaScript为基础展开谈论，初学，有错纠正。</p>
+<h2 id="开始啦！"><a href="#开始啦！" class="headerlink" title="开始啦！"></a>开始啦！</h2><!-- ![异步与同步](/images/asset/2016/c10f0ff42939d0.png) -->
+<a id="more"></a>
+<h2 id="一、同步与异步"><a href="#一、同步与异步" class="headerlink" title="一、同步与异步"></a>一、同步与异步</h2><h3 id="1-概念解析"><a href="#1-概念解析" class="headerlink" title="1. 概念解析"></a>1. 概念解析</h3><h4 id="A-同步"><a href="#A-同步" class="headerlink" title="A. 同步"></a>A. 同步</h4><p><strong>概念</strong>: 指程序运行时发出一个函数调用，在没有得到结果前，该调用不会被返回</p>
+<p>按照概念，大多数函数调用都是同步调用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i &lt; <span class="number">1000</span>;i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(i==<span class="number">999</span>) &#123;</span><br><span class="line">			<span class="built_in">console</span>.log(<span class="string">'f1调用'</span>);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'f2调用'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f1();</span><br><span class="line">f2();</span><br></pre></td></tr></table></figure>
+<p>以上定义了两个函数f1，f2，分别先后调用f1，f2，控制台输出结果如下:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f1调用</span><br><span class="line">f2调用</span><br></pre></td></tr></table></figure>
+<p>f2需要等待f1执行结果才开始执行，如果f1是一个耗时的功能调用，那么就会阻碍到程序的继续运行，所以我们有异步的引入</p>
+<h4 id="B-异步"><a href="#B-异步" class="headerlink" title="B. 异步"></a>B. 异步</h4><p><strong> 概念 </strong>: 指程序运行时发出一个函数调用，调用者不会立即得到结果。实际处理这个调用的部件是在调用发出后，通过状态、通知来通知调用者，或通过回调函数处理这个调用。</p>
+<p>最典型的就是JavaScript的Ajax请求，以jQuery为例</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">	url: <span class="string">"http://hostname:port/dirname"</span>,</span><br><span class="line">	type: <span class="string">"POST"</span>,</span><br><span class="line">	dataType: <span class="string">"json"</span>,</span><br><span class="line">	success: <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(data);</span><br><span class="line"></span><br><span class="line">		...</span><br><span class="line">	&#125;,</span><br><span class="line">	error: <span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(err);</span><br><span class="line"></span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>当成功发出Ajax请求后，响应的结果会通过success回调函数进行返回，而无需等待请求响应时间，实现异步操作，当然JavaScript的Ajax也可以同步操作，具体用法点击<a href="http://www.w3school.com.cn/jquery/ajax_ajax.asp" target="_blank" rel="external">这里</a></p>
+<h3 id="C-三种返回结果途经（从IO的角度）"><a href="#C-三种返回结果途经（从IO的角度）" class="headerlink" title="C. 三种返回结果途经（从IO的角度）"></a>C. 三种返回结果途经（从IO的角度）</h3><p>执行部件和调用者通过三种途经得到结果:</p>
+<blockquote>
+<p>a. 状态</p>
+<p>b. 通知</p>
+<p>c. 回调函数</p>
+</blockquote>
+<p>a: 如果用状态来通知，那么调用者就需要每隔一定时间检查一次，效率就很低</p>
+<p>b:  如果是使用通知的方式，效率则很高，因为执行部件几乎不需要做额外的操作。</p>
+<p>c: 至于回调函数，和通知没太多区别。</p>
+<h3 id="2-抽象例子"><a href="#2-抽象例子" class="headerlink" title="2. 抽象例子"></a>2. 抽象例子</h3><p>进一步抽象现实说明: 假设你去银行办理业务的事件</p>
+<p>当你到银行后，有两种方式：<br>(1)到ATM机排队等候            —-(排队等候)同步等待消息<br>(2)大厅取号，等到到你的号时，柜台人员会通知你去办理            —(等待别人通知)异步等待消息</p>
+<p><strong> 所以同步与异步中，不同的在于消息通知的机制。</strong></p>
+<p>异步消息通知机制中，等待消息者(你)通过注册一个回调机制，让等待的事件(办理业务)触发时由触发机制(柜台人员)通过某种机制(你一开始取的号码)找到等待消息者并通知</p>
+<p>同步/异步关注的是消息通知的机制，换而言之通知方式不同，至于怎么处理消息，并不在关注内</p>
+<h2 id="二、阻塞与非阻塞"><a href="#二、阻塞与非阻塞" class="headerlink" title="二、阻塞与非阻塞"></a>二、阻塞与非阻塞</h2><h3 id="1-概念解释"><a href="#1-概念解释" class="headerlink" title="1. 概念解释"></a>1. 概念解释</h3><h4 id="A-阻塞"><a href="#A-阻塞" class="headerlink" title="A. 阻塞"></a>A. 阻塞</h4><p><strong> 概念 </strong>: 阻塞调用指调用结果返回之前，当前线程被挂起，函数只有在得到结果之后才返回。</p>
+<p>或许会觉得阻塞调用与同步调用等同，实际上是两个不同的概念。</p>
+<p>对于同步调用，很多时候同步调用不一定造成阻塞状态，当前线程还处于激活，只是因为同步调用当前函数没有结果返回进入等待状态。</p>
+<h4 id="B-非阻塞"><a href="#B-非阻塞" class="headerlink" title="B. 非阻塞"></a>B. 非阻塞</h4><p><strong> 概念 </strong>: 非阻塞调用指调用时不能立即得到结果之前，该函数不会阻塞当前线程而会立即返回。</p>
+<h3 id="2-抽象例子-1"><a href="#2-抽象例子-1" class="headerlink" title="2. 抽象例子"></a>2. 抽象例子</h3><p>拿上面排队的例子继续，无论是排队还是等待柜员通知，你都不能干其他事情，那么就相当于阻塞状态，表现在程序里就是该程序一直阻塞在当前函数不能继续执行</p>
+<p>相反，当你排队或者等待柜员通知时，你还可以做其他事，比如打电话聊微信，那么就相当于非阻塞状态，表现在程序里就是该程序不会阻塞在当前函数或通知上，而是一边继续执行，一边等待。</p>
+<h2 id="三、易混淆点"><a href="#三、易混淆点" class="headerlink" title="三、易混淆点"></a>三、易混淆点</h2><h3 id="1-同步与阻塞"><a href="#1-同步与阻塞" class="headerlink" title="1. 同步与阻塞"></a>1. 同步与阻塞</h3><p><strong> 区别 </strong>: 上述说过两者不等同，同步关注消息通知机制，阻塞强调当前状态，用上面例子再次说明一下，同步相当于你是以排队的方式办理业务，阻塞相当于你在排队或者等待别人通知到你时之前你什么都不能干的状态;</p>
+<p>由于两者不同，所以可以组合，就有同步阻塞和同步非阻塞两种:</p>
+<p>a: 同步阻塞调用效率低下，因为当程序运行调用某功能时除了等待结果返回当前线程被挂起不能干其他事，运行时间都浪费在等待结果上</p>
+<p>b: 同步非阻塞貌似比同步阻塞好，实际上同样效率低下，想象一下刚刚上面提到的例子，当你排队等待时除了时不时观察是否到自己办理业务之外还做其他事情，要在两种行为之间来回切换，在程序上表现在等待过程中不断检测返回结果同时还<del>切换到其他线程上执行</del>，博主对此尚有保留，以JavaScript为例，JavaScript是单线程的但是<a href="https://www.zhihu.com/question/39565359" target="_blank" rel="external">有人</a>实现了同步非阻塞，博主感到神奇，有待研究</p>
+<h3 id="2-异步与非阻塞"><a href="#2-异步与非阻塞" class="headerlink" title="2. 异步与非阻塞"></a>2. 异步与非阻塞</h3><p><strong> 区别 </strong>: 与同步和阻塞的区别一样，所以也分异步阻塞与异步非阻塞</p>
+<p>a: 异步阻塞指当前程序等待消息通知时没有执行任何事情，当前线程仍处于激活但被挂起</p>
+<p>b: 异步非阻塞指当前程序等待消息通知时正在执行其他事情，当前线程不被挂起</p>
+<p>异步阻塞与同步阻塞实现效果类似，不同在于API是异步执行还是同步</p>
+<hr>
+<p>参考: <a href="http://blog.chinaunix.net/uid-26000296-id-3754118.html" target="_blank" rel="external">IO中同步、异步与阻塞、非阻塞的区别</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您的支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/pay/alipay.png" alt="Jim_Chen Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编程概念/" rel="tag">#编程概念</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/03/learn-to-make-git-server/" rel="next" title="10分钟避坑搭建git服务器">
+                <i class="fa fa-chevron-left"></i> 10分钟避坑搭建git服务器
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/11/thinkphp/" rel="prev" title="Thinkphp">
+                Thinkphp <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar/20160420.jpg"
+               alt="Jim_Chen" />
+          <p class="site-author-name" itemprop="name">Jim_Chen</p>
+          <p class="site-description motion-element" itemprop="description">Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JimChenWYU" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/JimChenPHPer" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开始啦！"><span class="nav-number">1.</span> <span class="nav-text">开始啦！</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、同步与异步"><span class="nav-number">2.</span> <span class="nav-text">一、同步与异步</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-概念解析"><span class="nav-number">2.1.</span> <span class="nav-text">1. 概念解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A-同步"><span class="nav-number">2.1.1.</span> <span class="nav-text">A. 同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-异步"><span class="nav-number">2.1.2.</span> <span class="nav-text">B. 异步</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-三种返回结果途经（从IO的角度）"><span class="nav-number">2.2.</span> <span class="nav-text">C. 三种返回结果途经（从IO的角度）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-抽象例子"><span class="nav-number">2.3.</span> <span class="nav-text">2. 抽象例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、阻塞与非阻塞"><span class="nav-number">3.</span> <span class="nav-text">二、阻塞与非阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-概念解释"><span class="nav-number">3.1.</span> <span class="nav-text">1. 概念解释</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A-阻塞"><span class="nav-number">3.1.1.</span> <span class="nav-text">A. 阻塞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-非阻塞"><span class="nav-number">3.1.2.</span> <span class="nav-text">B. 非阻塞</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-抽象例子-1"><span class="nav-number">3.2.</span> <span class="nav-text">2. 抽象例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、易混淆点"><span class="nav-number">4.</span> <span class="nav-text">三、易混淆点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-同步与阻塞"><span class="nav-number">4.1.</span> <span class="nav-text">1. 同步与阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-异步与非阻塞"><span class="nav-number">4.2.</span> <span class="nav-text">2. 异步与非阻塞</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jim_Chen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jimchen';
+      var disqus_identifier = '2016/05/11/synchronous-blocking-asynchronous-non-blocking/';
+      var disqus_title = '同步，异步，阻塞，非阻塞';
+      var disqus_url = 'http://blog.chenjunwu.com/2016/05/11/synchronous-blocking-asynchronous-non-blocking/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.html";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+  
+
+  
+
+  
+  
+</body>
+</html>
