@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.chenjunwu.com/"/>
-  <updated>2017-03-17T03:19:28.787Z</updated>
+  <updated>2017-03-22T06:30:32.977Z</updated>
   <id>http://blog.chenjunwu.com/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://blog.chenjunwu.com/2017/03/17/php-Q-A-1/"/>
     <id>http://blog.chenjunwu.com/2017/03/17/php-Q-A-1/</id>
     <published>2017-03-17T02:25:50.000Z</published>
-    <updated>2017-03-17T03:19:28.787Z</updated>
+    <updated>2017-03-22T06:30:32.977Z</updated>
     
-    <content type="html">&lt;p&gt;mdzz…由于我的centos服务器上需要使用composer部署laravel项目，而使用composer需要开启ssl，这是php需要开启扩展openssl，我的php版本是5.6.22，手动编译的，此时只要进入安装包相应的extension进行编译安装即可，然而神奇的事情发生了。&lt;/p&gt;
+    <content type="html">&lt;p&gt;mdzz…由于我的centos服务器上需要使用composer部署laravel项目，而使用composer需要开启ssl，这时php需要开启扩展openssl，我的php版本是5.6.22，手动编译的，此时只要进入安装包相应的extension进行编译安装即可，然而神奇的事情发生了。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;h2 id=&quot;问题所在&quot;&gt;&lt;a href=&quot;#问题所在&quot; class=&quot;headerlink&quot; title=&quot;问题所在&quot;&gt;&lt;/a&gt;问题所在&lt;/h2&gt;&lt;h3 id=&quot;安装过程&quot;&gt;&lt;a href=&quot;#安装过程&quot; class=&quot;headerlink&quot; title=&quot;安装过程&quot;&gt;&lt;/a&gt;安装过程&lt;/h3&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ cd ~/php5/ext/openssl&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ mv config0.m4 config.m4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ phpize&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ ./configure&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ make &amp;amp;&amp;amp; make test&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ make&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;这样会提示安装完毕&lt;/p&gt;
@@ -41,7 +41,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;mdzz…由于我的centos服务器上需要使用composer部署laravel项目，而使用composer需要开启ssl，这是php需要开启扩展openssl，我的php版本是5.6.22，手动编译的，此时只要进入安装包相应的extension进行编译安装即可，然而神奇的事情发生了。&lt;/p&gt;
+      &lt;p&gt;mdzz…由于我的centos服务器上需要使用composer部署laravel项目，而使用composer需要开启ssl，这时php需要开启扩展openssl，我的php版本是5.6.22，手动编译的，此时只要进入安装包相应的extension进行编译安装即可，然而神奇的事情发生了。&lt;/p&gt;
     
     </summary>
     
