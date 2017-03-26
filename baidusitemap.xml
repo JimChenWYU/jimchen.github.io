@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://blog.chenjunwu.com/2017/03/26/factory-pattern/</loc>
+    <lastmod>2017-03-26T15:30:20.375Z</lastmod>
+    <data>
+        <display>
+        <title>简单工厂，工厂和抽象工厂的区别</title>
+        <pubTime>2017-03-26T12:10:42.000Z</pubTime>
+        
+        <tag>设计模式</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术类" url="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://blog.chenjunwu.com/2017/03/17/php-Q-A-1/</loc>
     <lastmod>2017-03-22T06:30:32.977Z</lastmod>
     <data>
