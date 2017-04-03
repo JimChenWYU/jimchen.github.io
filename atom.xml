@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.chenjunwu.com/"/>
-  <updated>2017-03-26T15:30:20.375Z</updated>
+  <updated>2017-04-03T02:01:24.914Z</updated>
   <id>http://blog.chenjunwu.com/</id>
   
   <author>
@@ -14,6 +14,38 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Homestead添加多站点的坑</title>
+    <link href="http://blog.chenjunwu.com/2017/04/03/homestead/"/>
+    <id>http://blog.chenjunwu.com/2017/04/03/homestead/</id>
+    <published>2017-04-03T01:24:12.000Z</published>
+    <updated>2017-04-03T02:01:24.914Z</updated>
+    
+    <content type="html">&lt;p&gt;当配置Homestead多站点时，发现直接在Homestead.yaml配置是不可以的。当执行了&lt;code&gt;homestead provision&lt;/code&gt;后面的站点会覆盖前面的站点，导致配置的多站点无法生效，这是一个坑呀。&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h2 id=&quot;解决方法&quot;&gt;&lt;a href=&quot;#解决方法&quot; class=&quot;headerlink&quot; title=&quot;解决方法&quot;&gt;&lt;/a&gt;解决方法&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;如果我们开启homestead之后，使用ssh登录，就会找到多站点配置的地方&lt;code&gt;/etc/nginx/sites-enable/&lt;/code&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;之后我们通过命令&lt;code&gt;ls /vagrant/scripts&lt;/code&gt;发现有一个脚本&lt;code&gt;serve-laravel.sh&lt;/code&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;所以我们通过命令&lt;code&gt;sudo /vagrant/scripts/serve-laravel.sh application.app /home/vagrant/Code/application/public&lt;/code&gt;，这样&lt;code&gt;/etc/nginx/sites-enable/&lt;/code&gt;就会多出&lt;code&gt;application.app&lt;/code&gt;文件夹，此时由于homestead的fpm模块配置错误，我们还需要进入&lt;code&gt;application.app&lt;/code&gt;修改nginx的fpm配置，这样重启homestead之后，就可以通过&lt;code&gt;http://application.app&lt;/code&gt;访问你的应用了。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;当配置Homestead多站点时，发现直接在Homestead.yaml配置是不可以的。当执行了&lt;code&gt;homestead provision&lt;/code&gt;后面的站点会覆盖前面的站点，导致配置的多站点无法生效，这是一个坑呀。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+    
+    
+      <category term="PHP" scheme="http://blog.chenjunwu.com/tags/PHP/"/>
+    
+  </entry>
   
   <entry>
     <title>简单工厂，工厂和抽象工厂的区别</title>

@@ -4,6 +4,22 @@
   
     
     <entry>
+      <title><![CDATA[Homestead添加多站点的坑]]></title>
+      <url>http://blog.chenjunwu.com/2017/04/03/homestead/</url>
+      <content type="html"><![CDATA[<p>当配置Homestead多站点时，发现直接在Homestead.yaml配置是不可以的。当执行了<code>homestead provision</code>后面的站点会覆盖前面的站点，导致配置的多站点无法生效，这是一个坑呀。</p>
+<a id="more"></a>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><ol>
+<li><p>如果我们开启homestead之后，使用ssh登录，就会找到多站点配置的地方<code>/etc/nginx/sites-enable/</code>。</p>
+</li>
+<li><p>之后我们通过命令<code>ls /vagrant/scripts</code>发现有一个脚本<code>serve-laravel.sh</code>。</p>
+</li>
+<li><p>所以我们通过命令<code>sudo /vagrant/scripts/serve-laravel.sh application.app /home/vagrant/Code/application/public</code>，这样<code>/etc/nginx/sites-enable/</code>就会多出<code>application.app</code>文件夹，此时由于homestead的fpm模块配置错误，我们还需要进入<code>application.app</code>修改nginx的fpm配置，这样重启homestead之后，就可以通过<code>http://application.app</code>访问你的应用了。</p>
+</li>
+</ol>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[简单工厂，工厂和抽象工厂的区别]]></title>
       <url>http://blog.chenjunwu.com/2017/03/26/factory-pattern/</url>
       <content type="html"><![CDATA[<p>最近在看设计模式相关的书籍，然后看到工厂模式就搞混了头了，久久不能理解简单工厂，工厂模式和抽象工厂模式的区别，后来<a href="https://my.oschina.net/hanzhankang/blog/195150" target="_blank" rel="external">这里</a>的两三句话点醒了我。</p>

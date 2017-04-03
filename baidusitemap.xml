@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://blog.chenjunwu.com/2017/04/03/homestead/</loc>
+    <lastmod>2017-04-03T02:01:24.914Z</lastmod>
+    <data>
+        <display>
+        <title>Homestead添加多站点的坑</title>
+        <pubTime>2017-04-03T01:24:12.000Z</pubTime>
+        
+        <tag>PHP</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术类" url="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://blog.chenjunwu.com/2017/03/17/php-Q-A-1/</loc>
     <lastmod>2017-03-27T01:48:41.178Z</lastmod>
     <data>
