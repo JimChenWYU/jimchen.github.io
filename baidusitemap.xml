@@ -4,6 +4,27 @@
 
     
   <url>
+    <loc>http://blog.chenjunwu.com/2017/04/08/php-Q-A-2/</loc>
+    <lastmod>2017-04-08T09:15:16.158Z</lastmod>
+    <data>
+        <display>
+        <title>php-Q&A-2</title>
+        <pubTime>2017-04-08T08:19:10.000Z</pubTime>
+        
+        <tag>PHP</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术类" url="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
     <loc>http://blog.chenjunwu.com/2017/04/03/homestead/</loc>
     <lastmod>2017-04-03T02:01:24.914Z</lastmod>
     <data>
@@ -142,7 +163,6 @@
     </data>
     </url>
 
-    
     
   <url>
     <loc>http://blog.chenjunwu.com/2016/08/10/provider-factory-service%E4%B9%8B%E9%97%B4%E6%AF%94%E8%BE%83/</loc>
