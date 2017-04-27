@@ -135,7 +135,7 @@
     <link href="http://blog.chenjunwu.com/2017/03/17/php-Q-A-1/"/>
     <id>http://blog.chenjunwu.com/2017/03/17/php-Q-A-1/</id>
     <published>2017-03-17T02:25:50.000Z</published>
-    <updated>2017-04-27T05:22:51.815Z</updated>
+    <updated>2017-04-27T05:52:09.112Z</updated>
     
     <content type="html">&lt;p&gt;mdzz…由于我的centos服务器上需要使用composer部署laravel项目，而使用composer需要开启ssl，这时php需要开启扩展openssl，我的php版本是5.6.22，手动编译的，此时只要进入安装包相应的extension进行编译安装即可，然而神奇的事情发生了。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -146,7 +146,7 @@
 &lt;p&gt;重启服务器然后查看phpinfo，还是没有！纳闷了！然后Google了好久，试了好多方法还是不行！&lt;/p&gt;
 &lt;h2 id=&quot;解决方法&quot;&gt;&lt;a href=&quot;#解决方法&quot; class=&quot;headerlink&quot; title=&quot;解决方法&quot;&gt;&lt;/a&gt;解决方法&lt;/h2&gt;&lt;p&gt;偶然地一次在shell命令上打&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ php -v&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;发现如下&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;PHP Warning:  PHP Startup: openssl: Unable to initialize module&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;Module compiled with module API=.....&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;PHP    compiled with module API=.....&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;貌似是module里的API版本与PHP的API版本不一致，神奇呀！！我都没有重新下过其他版本的PHP，于是我只好去官网重新下载对应的版本&lt;/p&gt;
+&lt;p&gt;貌似是module1的API版本与PHP的API版本不一致，神奇呀！！我都没有重新下过其他版本的PHP，于是我只好去官网重新下载对应的版本&lt;/p&gt;
 &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ wget http://cn2.php.net/distributions/php-5.6.22.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ tar zxvf php-5.6.22.tar.gz&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;之后像上面那样重新安装openssl，并没有重新编译安装PHP，然后执行&lt;/p&gt;
 &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ php -v&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
