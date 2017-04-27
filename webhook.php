@@ -12,7 +12,7 @@ error_reporting(E_ALL);
 $secret = "blog-chenjunwu";
 // Path to your respostory on your server.
 // e.g. "/var/www/respostory"
-$path = "var/www/html/blog";
+$path = "/var/www/html/blog";
 // Headers deliveried from GitHub
 $signature = $_SERVER['HTTP_X_HUB_SIGNATURE'];
 echo 'Signature: ' . $signature . PHP_EOL;
