@@ -82,7 +82,7 @@
 <p>重启服务器然后查看phpinfo，还是没有！纳闷了！然后Google了好久，试了好多方法还是不行！</p>
 <h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>偶然地一次在shell命令上打<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ php -v</span><br></pre></td></tr></table></figure></p>
 <p>发现如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PHP Warning:  PHP Startup: openssl: Unable to initialize module</span><br><span class="line">Module compiled with module API=.....</span><br><span class="line">PHP    compiled with module API=.....</span><br></pre></td></tr></table></figure></p>
-<p>貌似是module1的API版本与PHP的API版本不一致，神奇呀！！我都没有重新下过其他版本的PHP，于是我只好去官网重新下载对应的版本</p>
+<p>貌似是module里的API版本与PHP的API版本不一致，神奇呀！！我都没有重新下过其他版本的PHP，于是我只好去官网重新下载对应的版本</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ wget http://cn2.php.net/distributions/php-5.6.22.tar.gz</span><br><span class="line"></span><br><span class="line">$ tar zxvf php-5.6.22.tar.gz</span><br></pre></td></tr></table></figure>
 <p>之后像上面那样重新安装openssl，并没有重新编译安装PHP，然后执行</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ php -v</span><br></pre></td></tr></table></figure>
