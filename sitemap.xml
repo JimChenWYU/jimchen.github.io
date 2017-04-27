@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.chenjunwu.com/sw.js</loc>
+    
+    <lastmod>2017-04-08T13:34:19.355Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.chenjunwu.com/2017/04/08/php-Q-A-2/</loc>
     
     <lastmod>2017-04-08T13:31:31.146Z</lastmod>
@@ -33,13 +40,6 @@
     <loc>http://blog.chenjunwu.com/2017/03/26/factory-pattern/</loc>
     
     <lastmod>2017-03-26T15:30:20.375Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://blog.chenjunwu.com/sw.js</loc>
-    
-    <lastmod>2017-03-11T09:27:32.295Z</lastmod>
     
   </url>
   
