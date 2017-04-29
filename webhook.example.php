@@ -9,10 +9,10 @@ error_reporting(E_ALL);
 
 // GitHub Webhook Secret.
 // Keep it the same with the 'Secret' field on your Webhooks / Manage webhook page of your respostory.
-$secret = "blog-chenjunwu";
+$secret = "";
 // Path to your respostory on your server.
 // e.g. "/var/www/respostory"
-$path = "/var/www/html/blog";
+$path = "";
 // Headers deliveried from GitHub
 $signature = $_SERVER['HTTP_X_HUB_SIGNATURE'];
 echo 'Signature: ' . $signature . PHP_EOL;
