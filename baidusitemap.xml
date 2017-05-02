@@ -4,8 +4,28 @@
 
     
   <url>
+    <loc>http://blog.chenjunwu.com/2017/05/02/Request-pipeline/</loc>
+    <lastmod>2017-05-02T09:38:15.327Z</lastmod>
+    <data>
+        <display>
+        <title>一步步带你理解请求处理管道</title>
+        <pubTime>2017-05-02T07:22:46.000Z</pubTime>
+        
+        <tag>PHP</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术类" url="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://blog.chenjunwu.com/2017/05/01/Service-provider/</loc>
-    <lastmod>2017-05-01T12:59:44.955Z</lastmod>
+    <lastmod>2017-05-01T13:18:33.257Z</lastmod>
     <data>
         <display>
         <title>一步步带你实现一个服务提供者</title>
