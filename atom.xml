@@ -4,9 +4,9 @@
   <subtitle>Walk steps step by step!</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://blog.chenjunwu.com/"/>
+  <link href="https://blog.chenjunwu.cn/"/>
   <updated>2017-05-03T07:11:39.074Z</updated>
-  <id>http://blog.chenjunwu.com/</id>
+  <id>https://blog.chenjunwu.cn/</id>
   
   <author>
     <name>Jim_Chen</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>一步步带你理解Laravel中的请求管道</title>
-    <link href="http://blog.chenjunwu.com/2017/05/03/Request-Pipeline-in-Laravel/"/>
-    <id>http://blog.chenjunwu.com/2017/05/03/Request-Pipeline-in-Laravel/</id>
+    <link href="https://blog.chenjunwu.cn/2017/05/03/Request-Pipeline-in-Laravel/"/>
+    <id>https://blog.chenjunwu.cn/2017/05/03/Request-Pipeline-in-Laravel/</id>
     <published>2017-05-03T02:58:04.000Z</published>
     <updated>2017-05-03T07:11:39.074Z</updated>
     
@@ -66,17 +66,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="PHP" scheme="http://blog.chenjunwu.com/tags/PHP/"/>
+      <category term="PHP" scheme="https://blog.chenjunwu.cn/tags/PHP/"/>
     
   </entry>
   
   <entry>
     <title>一步步带你理解请求处理管道</title>
-    <link href="http://blog.chenjunwu.com/2017/05/02/Request-pipeline/"/>
-    <id>http://blog.chenjunwu.com/2017/05/02/Request-pipeline/</id>
+    <link href="https://blog.chenjunwu.cn/2017/05/02/Request-pipeline/"/>
+    <id>https://blog.chenjunwu.cn/2017/05/02/Request-pipeline/</id>
     <published>2017-05-02T07:22:46.000Z</published>
     <updated>2017-05-03T06:19:23.497Z</updated>
     
@@ -114,17 +114,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="PHP" scheme="http://blog.chenjunwu.com/tags/PHP/"/>
+      <category term="PHP" scheme="https://blog.chenjunwu.cn/tags/PHP/"/>
     
   </entry>
   
   <entry>
     <title>一步步带你实现一个服务提供者</title>
-    <link href="http://blog.chenjunwu.com/2017/05/01/Service-provider/"/>
-    <id>http://blog.chenjunwu.com/2017/05/01/Service-provider/</id>
+    <link href="https://blog.chenjunwu.cn/2017/05/01/Service-provider/"/>
+    <id>https://blog.chenjunwu.cn/2017/05/01/Service-provider/</id>
     <published>2017-05-01T08:23:54.000Z</published>
     <updated>2017-05-01T13:18:33.257Z</updated>
     
@@ -152,17 +152,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="PHP" scheme="http://blog.chenjunwu.com/tags/PHP/"/>
+      <category term="PHP" scheme="https://blog.chenjunwu.cn/tags/PHP/"/>
     
   </entry>
   
   <entry>
     <title>.env in Laravel5.1</title>
-    <link href="http://blog.chenjunwu.com/2017/04/29/env-in-Laravel5-1/"/>
-    <id>http://blog.chenjunwu.com/2017/04/29/env-in-Laravel5-1/</id>
+    <link href="https://blog.chenjunwu.cn/2017/04/29/env-in-Laravel5-1/"/>
+    <id>https://blog.chenjunwu.cn/2017/04/29/env-in-Laravel5-1/</id>
     <published>2017-04-29T02:15:00.000Z</published>
     <updated>2017-04-29T09:13:28.360Z</updated>
     
@@ -205,17 +205,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="PHP" scheme="http://blog.chenjunwu.com/tags/PHP/"/>
+      <category term="PHP" scheme="https://blog.chenjunwu.cn/tags/PHP/"/>
     
   </entry>
   
   <entry>
     <title>php-Q&amp;A-2</title>
-    <link href="http://blog.chenjunwu.com/2017/04/08/php-Q-A-2/"/>
-    <id>http://blog.chenjunwu.com/2017/04/08/php-Q-A-2/</id>
+    <link href="https://blog.chenjunwu.cn/2017/04/08/php-Q-A-2/"/>
+    <id>https://blog.chenjunwu.cn/2017/04/08/php-Q-A-2/</id>
     <published>2017-04-08T08:19:10.000Z</published>
     <updated>2017-04-08T13:31:31.146Z</updated>
     
@@ -243,17 +243,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="PHP" scheme="http://blog.chenjunwu.com/tags/PHP/"/>
+      <category term="PHP" scheme="https://blog.chenjunwu.cn/tags/PHP/"/>
     
   </entry>
   
   <entry>
     <title>Homestead添加多站点的坑</title>
-    <link href="http://blog.chenjunwu.com/2017/04/03/homestead/"/>
-    <id>http://blog.chenjunwu.com/2017/04/03/homestead/</id>
+    <link href="https://blog.chenjunwu.cn/2017/04/03/homestead/"/>
+    <id>https://blog.chenjunwu.cn/2017/04/03/homestead/</id>
     <published>2017-04-03T01:24:12.000Z</published>
     <updated>2017-04-03T02:01:24.914Z</updated>
     
@@ -275,17 +275,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="PHP" scheme="http://blog.chenjunwu.com/tags/PHP/"/>
+      <category term="PHP" scheme="https://blog.chenjunwu.cn/tags/PHP/"/>
     
   </entry>
   
   <entry>
     <title>简单工厂，工厂和抽象工厂的区别</title>
-    <link href="http://blog.chenjunwu.com/2017/03/26/factory-pattern/"/>
-    <id>http://blog.chenjunwu.com/2017/03/26/factory-pattern/</id>
+    <link href="https://blog.chenjunwu.cn/2017/03/26/factory-pattern/"/>
+    <id>https://blog.chenjunwu.cn/2017/03/26/factory-pattern/</id>
     <published>2017-03-26T12:10:42.000Z</published>
     <updated>2017-03-26T15:30:20.375Z</updated>
     
@@ -320,17 +320,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="设计模式" scheme="http://blog.chenjunwu.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+      <category term="设计模式" scheme="https://blog.chenjunwu.cn/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
   </entry>
   
   <entry>
     <title>php-Q&amp;A-1</title>
-    <link href="http://blog.chenjunwu.com/2017/03/17/php-Q-A-1/"/>
-    <id>http://blog.chenjunwu.com/2017/03/17/php-Q-A-1/</id>
+    <link href="https://blog.chenjunwu.cn/2017/03/17/php-Q-A-1/"/>
+    <id>https://blog.chenjunwu.cn/2017/03/17/php-Q-A-1/</id>
     <published>2017-03-17T02:25:50.000Z</published>
     <updated>2017-04-27T06:23:09.379Z</updated>
     
@@ -357,17 +357,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="PHP" scheme="http://blog.chenjunwu.com/tags/PHP/"/>
+      <category term="PHP" scheme="https://blog.chenjunwu.cn/tags/PHP/"/>
     
   </entry>
   
   <entry>
     <title>Android学习记录</title>
-    <link href="http://blog.chenjunwu.com/2017/03/11/android-learning/"/>
-    <id>http://blog.chenjunwu.com/2017/03/11/android-learning/</id>
+    <link href="https://blog.chenjunwu.cn/2017/03/11/android-learning/"/>
+    <id>https://blog.chenjunwu.cn/2017/03/11/android-learning/</id>
     <published>2017-03-11T04:35:00.000Z</published>
     <updated>2017-03-11T04:37:15.766Z</updated>
     
@@ -432,17 +432,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="Android" scheme="http://blog.chenjunwu.com/tags/Android/"/>
+      <category term="Android" scheme="https://blog.chenjunwu.cn/tags/Android/"/>
     
   </entry>
   
   <entry>
     <title>phpstorm-psr2</title>
-    <link href="http://blog.chenjunwu.com/2017/01/13/phpstorm-psr2/"/>
-    <id>http://blog.chenjunwu.com/2017/01/13/phpstorm-psr2/</id>
+    <link href="https://blog.chenjunwu.cn/2017/01/13/phpstorm-psr2/"/>
+    <id>https://blog.chenjunwu.cn/2017/01/13/phpstorm-psr2/</id>
     <published>2017-01-13T08:04:58.000Z</published>
     <updated>2017-01-13T13:47:33.648Z</updated>
     
@@ -468,17 +468,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="PHP" scheme="http://blog.chenjunwu.com/tags/PHP/"/>
+      <category term="PHP" scheme="https://blog.chenjunwu.cn/tags/PHP/"/>
     
   </entry>
   
   <entry>
     <title>2016年总结</title>
-    <link href="http://blog.chenjunwu.com/2016/12/30/summarize2016/"/>
-    <id>http://blog.chenjunwu.com/2016/12/30/summarize2016/</id>
+    <link href="https://blog.chenjunwu.cn/2016/12/30/summarize2016/"/>
+    <id>https://blog.chenjunwu.cn/2016/12/30/summarize2016/</id>
     <published>2016-12-30T10:55:34.000Z</published>
     <updated>2017-01-12T14:13:10.995Z</updated>
     
@@ -503,14 +503,14 @@
     </summary>
     
     
-      <category term="生活类" scheme="http://blog.chenjunwu.com/tags/%E7%94%9F%E6%B4%BB%E7%B1%BB/"/>
+      <category term="生活类" scheme="https://blog.chenjunwu.cn/tags/%E7%94%9F%E6%B4%BB%E7%B1%BB/"/>
     
   </entry>
   
   <entry>
     <title>Redis安装与使用(一)</title>
-    <link href="http://blog.chenjunwu.com/2016/09/25/redis/"/>
-    <id>http://blog.chenjunwu.com/2016/09/25/redis/</id>
+    <link href="https://blog.chenjunwu.cn/2016/09/25/redis/"/>
+    <id>https://blog.chenjunwu.cn/2016/09/25/redis/</id>
     <published>2016-09-25T08:33:41.000Z</published>
     <updated>2016-09-25T13:52:15.482Z</updated>
     
@@ -550,17 +550,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="服务器端" scheme="http://blog.chenjunwu.com/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF/"/>
+      <category term="服务器端" scheme="https://blog.chenjunwu.cn/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF/"/>
     
   </entry>
   
   <entry>
     <title>Provider, Factory, Service之间比较</title>
-    <link href="http://blog.chenjunwu.com/2016/08/10/provider-factory-service%E4%B9%8B%E9%97%B4%E6%AF%94%E8%BE%83/"/>
-    <id>http://blog.chenjunwu.com/2016/08/10/provider-factory-service之间比较/</id>
+    <link href="https://blog.chenjunwu.cn/2016/08/10/provider-factory-service%E4%B9%8B%E9%97%B4%E6%AF%94%E8%BE%83/"/>
+    <id>https://blog.chenjunwu.cn/2016/08/10/provider-factory-service之间比较/</id>
     <published>2016-08-10T08:13:23.000Z</published>
     <updated>2016-08-10T11:34:41.061Z</updated>
     
@@ -602,17 +602,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="前端" scheme="http://blog.chenjunwu.com/tags/%E5%89%8D%E7%AB%AF/"/>
+      <category term="前端" scheme="https://blog.chenjunwu.cn/tags/%E5%89%8D%E7%AB%AF/"/>
     
   </entry>
   
   <entry>
     <title>$watch, $apply, $digest的关系</title>
-    <link href="http://blog.chenjunwu.com/2016/08/08/$watch-$apply-$digest/"/>
-    <id>http://blog.chenjunwu.com/2016/08/08/$watch-$apply-$digest/</id>
+    <link href="https://blog.chenjunwu.cn/2016/08/08/$watch-$apply-$digest/"/>
+    <id>https://blog.chenjunwu.cn/2016/08/08/$watch-$apply-$digest/</id>
     <published>2016-08-08T03:34:12.000Z</published>
     <updated>2016-08-10T11:31:02.613Z</updated>
     
@@ -686,17 +686,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="前端" scheme="http://blog.chenjunwu.com/tags/%E5%89%8D%E7%AB%AF/"/>
+      <category term="前端" scheme="https://blog.chenjunwu.cn/tags/%E5%89%8D%E7%AB%AF/"/>
     
   </entry>
   
   <entry>
     <title>关于AngularJS的$q</title>
-    <link href="http://blog.chenjunwu.com/2016/08/06/q-AngularJS/"/>
-    <id>http://blog.chenjunwu.com/2016/08/06/q-AngularJS/</id>
+    <link href="https://blog.chenjunwu.cn/2016/08/06/q-AngularJS/"/>
+    <id>https://blog.chenjunwu.cn/2016/08/06/q-AngularJS/</id>
     <published>2016-08-06T07:26:21.000Z</published>
     <updated>2016-08-08T06:34:56.432Z</updated>
     
@@ -733,17 +733,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="前端" scheme="http://blog.chenjunwu.com/tags/%E5%89%8D%E7%AB%AF/"/>
+      <category term="前端" scheme="https://blog.chenjunwu.cn/tags/%E5%89%8D%E7%AB%AF/"/>
     
   </entry>
   
   <entry>
     <title>接口回调</title>
-    <link href="http://blog.chenjunwu.com/2016/06/23/java-interface-callback/"/>
-    <id>http://blog.chenjunwu.com/2016/06/23/java-interface-callback/</id>
+    <link href="https://blog.chenjunwu.cn/2016/06/23/java-interface-callback/"/>
+    <id>https://blog.chenjunwu.cn/2016/06/23/java-interface-callback/</id>
     <published>2016-06-23T14:45:14.000Z</published>
     <updated>2016-08-06T07:40:29.422Z</updated>
     
@@ -771,17 +771,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="JAVA" scheme="http://blog.chenjunwu.com/tags/JAVA/"/>
+      <category term="JAVA" scheme="https://blog.chenjunwu.cn/tags/JAVA/"/>
     
   </entry>
   
   <entry>
     <title>UEditor使用</title>
-    <link href="http://blog.chenjunwu.com/2016/06/06/UEditor/"/>
-    <id>http://blog.chenjunwu.com/2016/06/06/UEditor/</id>
+    <link href="https://blog.chenjunwu.cn/2016/06/06/UEditor/"/>
+    <id>https://blog.chenjunwu.cn/2016/06/06/UEditor/</id>
     <published>2016-06-06T11:52:24.000Z</published>
     <updated>2016-06-23T02:31:51.153Z</updated>
     
@@ -812,17 +812,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="前端" scheme="http://blog.chenjunwu.com/tags/%E5%89%8D%E7%AB%AF/"/>
+      <category term="前端" scheme="https://blog.chenjunwu.cn/tags/%E5%89%8D%E7%AB%AF/"/>
     
   </entry>
   
   <entry>
     <title>phalcon的依赖注入</title>
-    <link href="http://blog.chenjunwu.com/2016/05/13/phalcon_di/"/>
-    <id>http://blog.chenjunwu.com/2016/05/13/phalcon_di/</id>
+    <link href="https://blog.chenjunwu.cn/2016/05/13/phalcon_di/"/>
+    <id>https://blog.chenjunwu.cn/2016/05/13/phalcon_di/</id>
     <published>2016-05-12T16:24:10.000Z</published>
     <updated>2016-06-23T14:06:08.888Z</updated>
     
@@ -882,17 +882,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="PHP" scheme="http://blog.chenjunwu.com/tags/PHP/"/>
+      <category term="PHP" scheme="https://blog.chenjunwu.cn/tags/PHP/"/>
     
   </entry>
   
   <entry>
     <title>Thinkphp</title>
-    <link href="http://blog.chenjunwu.com/2016/05/11/thinkphp/"/>
-    <id>http://blog.chenjunwu.com/2016/05/11/thinkphp/</id>
+    <link href="https://blog.chenjunwu.cn/2016/05/11/thinkphp/"/>
+    <id>https://blog.chenjunwu.cn/2016/05/11/thinkphp/</id>
     <published>2016-05-11T14:29:48.000Z</published>
     <updated>2016-06-23T14:06:07.548Z</updated>
     
@@ -934,17 +934,17 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="PHP" scheme="http://blog.chenjunwu.com/tags/PHP/"/>
+      <category term="PHP" scheme="https://blog.chenjunwu.cn/tags/PHP/"/>
     
   </entry>
   
   <entry>
     <title>同步，异步，阻塞，非阻塞</title>
-    <link href="http://blog.chenjunwu.com/2016/05/11/synchronous-blocking-asynchronous-non-blocking/"/>
-    <id>http://blog.chenjunwu.com/2016/05/11/synchronous-blocking-asynchronous-non-blocking/</id>
+    <link href="https://blog.chenjunwu.cn/2016/05/11/synchronous-blocking-asynchronous-non-blocking/"/>
+    <id>https://blog.chenjunwu.cn/2016/05/11/synchronous-blocking-asynchronous-non-blocking/</id>
     <published>2016-05-11T01:32:51.000Z</published>
     <updated>2016-06-23T02:31:47.160Z</updated>
     
@@ -1000,10 +1000,10 @@
     
     </summary>
     
-      <category term="技术类" scheme="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
     
     
-      <category term="编程概念" scheme="http://blog.chenjunwu.com/tags/%E7%BC%96%E7%A8%8B%E6%A6%82%E5%BF%B5/"/>
+      <category term="编程概念" scheme="https://blog.chenjunwu.cn/tags/%E7%BC%96%E7%A8%8B%E6%A6%82%E5%BF%B5/"/>
     
   </entry>
   
