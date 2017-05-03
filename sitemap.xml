@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.chenjunwu.com/2017/05/03/Request-Pipeline-in-Laravel/</loc>
+    
+    <lastmod>2017-05-03T07:11:39.074Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.chenjunwu.com/2017/05/02/Request-pipeline/</loc>
     
-    <lastmod>2017-05-02T09:45:04.358Z</lastmod>
+    <lastmod>2017-05-03T06:19:23.497Z</lastmod>
     
   </url>
   

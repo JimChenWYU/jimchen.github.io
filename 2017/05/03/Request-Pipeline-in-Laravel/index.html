@@ -1,0 +1,875 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PHP," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jim_Chen 的小站" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Laravel5.1 源码导读系列教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一步步带你理解Laravel中的请求管道">
+<meta property="og:url" content="http://blog.chenjunwu.com/2017/05/03/Request-Pipeline-in-Laravel/index.html">
+<meta property="og:site_name" content="Jim_Chen 的小站">
+<meta property="og:description" content="Laravel5.1 源码导读系列教程">
+<meta property="og:updated_time" content="2017-05-03T07:11:39.074Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一步步带你理解Laravel中的请求管道">
+<meta name="twitter:description" content="Laravel5.1 源码导读系列教程">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 一步步带你理解Laravel中的请求管道 | Jim_Chen 的小站 </title>
+  <!-- 自定义引入Service Worker -->
+  <script>
+    (function () {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js');
+      }
+    }())
+  </script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?847b8ae18c9ed40e9f63186ba0592e56";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Jim_Chen 的小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Walk steps step by step!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                一步步带你理解Laravel中的请求管道
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-05-03T10:58:04+08:00" content="2017-05-03">
+              2017-05-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术类/" itemprop="url" rel="index">
+                    <span itemprop="name">技术类</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/05/03/Request-Pipeline-in-Laravel/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/05/03/Request-Pipeline-in-Laravel/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Laravel5.1 源码导读系列教程</p>
+<a id="more"></a>
+<h2 id="大致请求流程"><a href="#大致请求流程" class="headerlink" title="大致请求流程"></a>大致请求流程</h2><p>如果我们从入口文件index.php看，就可以看到大致的流程了</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自动加载</span></span><br><span class="line"><span class="keyword">require</span> <span class="keyword">__DIR__</span>.<span class="string">'/../bootstrap/autoload.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获得应用的容器实例</span></span><br><span class="line">$app = <span class="keyword">require_once</span> <span class="keyword">__DIR__</span>.<span class="string">'/../bootstrap/app.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从容器中生成kernel类的实例</span></span><br><span class="line">$kernel = $app-&gt;make(Illuminate\Contracts\Http\Kernel::class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理请求，生成响应</span></span><br><span class="line">$response = $kernel-&gt;handle(</span><br><span class="line">    $request = Illuminate\Http\Request::capture()</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发送响应给客户端</span></span><br><span class="line">$response-&gt;send();</span><br><span class="line"></span><br><span class="line">$kernel-&gt;terminate($request, $response);</span><br></pre></td></tr></table></figure>
+<p>所以我们大致看到流程，那么关注点在这</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$response = $kernel-&gt;handle(</span><br><span class="line">    $request = Illuminate\Http\Request::capture()</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>我们看到了<code>handle</code>方法，是不是想起什么？</p>
+<h2 id="深入Kernel类"><a href="#深入Kernel类" class="headerlink" title="深入Kernel类"></a>深入Kernel类</h2><p>文件 <code>Illuminate\Foundation\Http\Kernel.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Handle an incoming HTTP request.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span><br><span class="line"> * <span class="doctag">@return</span> \Illuminate\Http\Response</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        $request-&gt;enableHttpMethodParameterOverride();</span><br><span class="line"></span><br><span class="line">        $response = $this-&gt;sendRequestThroughRouter($request);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">        $this-&gt;reportException($e);</span><br><span class="line"></span><br><span class="line">        $response = $this-&gt;renderException($request, $e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable $e) &#123;</span><br><span class="line">        $e = <span class="keyword">new</span> FatalThrowableError($e);</span><br><span class="line"></span><br><span class="line">        $this-&gt;reportException($e);</span><br><span class="line"></span><br><span class="line">        $response = $this-&gt;renderException($request, $e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $this-&gt;app[<span class="string">'events'</span>]-&gt;fire(<span class="string">'kernel.handled'</span>, [$request, $response]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $response;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从注释我们可以明白，当请求进来时，这是首先处理的方法，我们注意到<code>sendRequestThroughRouter($request)</code>，这里把请求传入，通过路由匹配进行调度处理</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Send the given request through the middleware / router.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span><br><span class="line"> * <span class="doctag">@return</span> \Illuminate\Http\Response</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">sendRequestThroughRouter</span><span class="params">($request)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $this-&gt;app-&gt;instance(<span class="string">'request'</span>, $request);</span><br><span class="line"></span><br><span class="line">    Facade::clearResolvedInstance(<span class="string">'request'</span>);</span><br><span class="line"></span><br><span class="line">    $this-&gt;bootstrap();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">new</span> Pipeline($this-&gt;app))</span><br><span class="line">                -&gt;send($request)</span><br><span class="line">                -&gt;through($this-&gt;app-&gt;shouldSkipMiddleware() ? [] : $this-&gt;middleware)</span><br><span class="line">                -&gt;then($this-&gt;dispatchToRouter());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>于是我们可以看到返回值，新建一个<code>Pipeline</code>类，并依此调用<code>send()</code>，<code>through()</code>，<code>then()</code></p>
+<p>前两个方法比较好理解，分别将$request和中间件数组向<code>Pipeline</code>类实例传递，我们也看一下这里调用到的方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Determine if middleware has been disabled for the application.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@return</span> bool</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">shouldSkipMiddleware</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $this-&gt;bound(<span class="string">'middleware.disable'</span>) &amp;&amp;</span><br><span class="line">           $this-&gt;make(<span class="string">'middleware.disable'</span>) === <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Get the route dispatcher callback.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@return</span> \Closure</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">dispatchToRouter</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($request)</span> </span>&#123;</span><br><span class="line">        $this-&gt;app-&gt;instance(<span class="string">'request'</span>, $request);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> $this-&gt;router-&gt;dispatch($request);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意，以上两个方法并不在同一个类中，这里只是为了演示效果放在同一个地方展示，<code>shouldSkipMiddleware()</code>就是判断应用是不是需要调用中间件，需要返回真，并通过<code>through()</code>向<code>Pipeline</code>实例传递该类包含的中间件数组<code>$middleware</code>。而<code>dispatchToRouter()</code>由注释我们得知该方法作用是获得路由分发的回调函数，如果我们继续分析，其实这就是我们<a href="/2017/05/01/Service-provider/">上一节</a>所说到的默认匿名函数，两者异曲同工之妙。</p>
+<h2 id="请求管道处理分析"><a href="#请求管道处理分析" class="headerlink" title="请求管道处理分析"></a>请求管道处理分析</h2><p>我们继续深入<code>Pipeline</code>类，只关注几个重要的API方法和属性</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * The object being passed through the pipeline.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@var</span> mixed</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> $passable;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * The array of class pipes.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@var</span> array</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> $pipes = [];</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * The method to call on each pipe.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@var</span> string</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> $method = <span class="string">'handle'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Set the object being sent through the pipeline.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  mixed  $passable</span><br><span class="line"> * <span class="doctag">@return</span> $this</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">send</span><span class="params">($passable)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $this-&gt;passable = $passable;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $this;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Set the array of pipes.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  array|mixed  $pipes</span><br><span class="line"> * <span class="doctag">@return</span> $this</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">through</span><span class="params">($pipes)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $this-&gt;pipes = is_array($pipes) ? $pipes : func_get_args();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $this;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Run the pipeline with a final destination callback.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Closure  $destination</span><br><span class="line"> * <span class="doctag">@return</span> mixed</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">then</span><span class="params">(Closure $destination)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $firstSlice = $this-&gt;getInitialSlice($destination);</span><br><span class="line"></span><br><span class="line">    $pipes = array_reverse($this-&gt;pipes);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> call_user_func(</span><br><span class="line">        array_reduce($pipes, $this-&gt;getSlice(), $firstSlice), $this-&gt;passable</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Get a Closure that represents a slice of the application onion.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@return</span> \Closure</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getSlice</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($stack, $pipe)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($passable)</span> <span class="title">use</span> <span class="params">($stack, $pipe)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// If the pipe is an instance of a Closure, we will just call it directly but</span></span><br><span class="line">            <span class="comment">// otherwise we'll resolve the pipes out of the container and call it with</span></span><br><span class="line">            <span class="comment">// the appropriate method and arguments, returning the results back out.</span></span><br><span class="line">            <span class="keyword">if</span> ($pipe <span class="keyword">instanceof</span> Closure) &#123;</span><br><span class="line">                <span class="keyword">return</span> call_user_func($pipe, $passable, $stack);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">list</span>($name, $parameters) = $this-&gt;parsePipeString($pipe);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">return</span> call_user_func_array([$this-&gt;container-&gt;make($name), $this-&gt;method],</span><br><span class="line">                                            array_merge([$passable, $stack], $parameters));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Get the initial slice to begin the stack call.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Closure  $destination</span><br><span class="line"> * <span class="doctag">@return</span> \Closure</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getInitialSlice</span><span class="params">(Closure $destination)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($passable)</span> <span class="title">use</span> <span class="params">($destination)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> call_user_func($destination, $passable);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>是不是突然有点混乱了？不急，接下来我们慢慢解释。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * The object being passed through the pipeline.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@var</span> mixed</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> $passable;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * The array of class pipes.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@var</span> array</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> $pipes = [];</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Set the object being sent through the pipeline.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  mixed  $passable</span><br><span class="line"> * <span class="doctag">@return</span> $this</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">send</span><span class="params">($passable)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $this-&gt;passable = $passable;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $this;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Set the array of pipes.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  array|mixed  $pipes</span><br><span class="line"> * <span class="doctag">@return</span> $this</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">through</span><span class="params">($pipes)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">// func_get_args()具体可以查看PHP文档，大致含义返回该函数的参数列表数组，</span></span><br><span class="line">    <span class="comment">// 也就是该方法提供给调用者有更多调用形式，可以使用参数列表代替数组传递</span></span><br><span class="line">    $this-&gt;pipes = is_array($pipes) ? $pipes : func_get_args();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里由注释可见其含义，<code>$passable</code>和<code>$pipes</code>就是在<code>Pipeline</code>类中分别负责维护在<code>Kernel</code>类中传递进来的<code>$request</code>请求和中间件数组，分别由<code>send()</code>和<code>through()</code>进行操作。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Run the pipeline with a final destination callback.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Closure  $destination</span><br><span class="line"> * <span class="doctag">@return</span> mixed</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">then</span><span class="params">(Closure $destination)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $firstSlice = $this-&gt;getInitialSlice($destination);</span><br><span class="line"></span><br><span class="line">    $pipes = array_reverse($this-&gt;pipes);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> call_user_func(</span><br><span class="line">        array_reduce($pipes, $this-&gt;getSlice(), $firstSlice), $this-&gt;passable</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>then()</code>方法我们再熟悉不过了，这不就和<a href="/2017/05/01/Service-provider/">上一节</a>看到的<code>then()</code>方法如出一辙吗？这里只是有个小细节<code>$pipes = array_reverse($this-&gt;pipes);</code>，这里只是将<code>$this-&gt;pipes</code>倒置了而已，为什么要这样呢？让我们回想<a href="/2017/05/01/Service-provider/">上一节</a>我们没有这样做会怎么样？即使我们的数组是这样排序：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> $pipes = [</span><br><span class="line">    <span class="string">'Request1'</span>,</span><br><span class="line">    <span class="string">'Request2'</span>,</span><br><span class="line">    <span class="string">'Request3'</span>,</span><br><span class="line">    <span class="string">'Request4'</span>,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<p>但是最终调用顺序是这样的：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Request4::handle(<span class="function"><span class="keyword">function</span> <span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Request3::handle(<span class="function"><span class="keyword">function</span> <span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Request2::handle(<span class="function"><span class="keyword">function</span> <span class="params">()</span></span>&#123;</span><br><span class="line">                <span class="keyword">return</span> Reuqest1::handle(<span class="function"><span class="keyword">function</span> <span class="params">()</span></span>&#123;</span><br><span class="line">                    <span class="keyword">echo</span> <span class="string">'请求处理中...'</span> . <span class="string">"&lt;br /&gt;"</span>;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以将数组倒置的作用就在此，能够按数组的顺序进行请求处理。</p>
+<p>那么最初的堆栈调用片段，究竟是怎么回事呢？</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Get the initial slice to begin the stack call.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Closure  $destination</span><br><span class="line"> * <span class="doctag">@return</span> \Closure</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getInitialSlice</span><span class="params">(Closure $destination)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($passable)</span> <span class="title">use</span> <span class="params">($destination)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> call_user_func($destination, $passable);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结合<code>then()</code>，从这里看到，匿名函数<code>$destination</code>其实就是<code>Kernel</code>类中的<code>dispatchToRouter()</code>方法，这里这个方法在返回的闭包函数中进行了调用并返回，实质就是一个回调函数，所以<code>$firstSlice</code>其实就是一个会返回<code>Kernel</code>类<code>dispatchToRouter()</code>方法中返回值的闭包函数，只是这里为回调函数传入参数，参数为请求实例。</p>
+<h2 id="请求管道处理关键"><a href="#请求管道处理关键" class="headerlink" title="请求管道处理关键"></a>请求管道处理关键</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * The method to call on each pipe.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@var</span> string</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> $method = <span class="string">'handle'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Get a Closure that represents a slice of the application onion.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@return</span> \Closure</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getSlice</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($stack, $pipe)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($passable)</span> <span class="title">use</span> <span class="params">($stack, $pipe)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// If the pipe is an instance of a Closure, we will just call it directly but</span></span><br><span class="line">            <span class="comment">// otherwise we'll resolve the pipes out of the container and call it with</span></span><br><span class="line">            <span class="comment">// the appropriate method and arguments, returning the results back out.</span></span><br><span class="line">            <span class="keyword">if</span> ($pipe <span class="keyword">instanceof</span> Closure) &#123;</span><br><span class="line">                <span class="keyword">return</span> call_user_func($pipe, $passable, $stack);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">list</span>($name, $parameters) = $this-&gt;parsePipeString($pipe);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">return</span> call_user_func_array([$this-&gt;container-&gt;make($name), $this-&gt;method],</span><br><span class="line">                                            array_merge([$passable, $stack], $parameters));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这和<a href="/2017/05/01/Service-provider/">上一节</a>的关键一样，同样可以获得一个闭包函数，用来处理中间件类，而这个闭包函数的参数正是请求实例。我们更加关注else的实现，因为这里是对应中间件类处理的过程，我们解读一下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> call_user_func_array([$this-&gt;container-&gt;make($name), $this-&gt;method], array_merge([$passable, $stack], $parameters));</span><br></pre></td></tr></table></figure>
+<p>首先<code>call_user_func_array()</code>是执行一个方法，而这个方法是从容器中实例化对应的中间件类并从中调用<code>handle</code>方法处理<code>array_merge([$passable, $stack], $parameters)</code>这里返回的数组参数，如果你去查看中间件类，一定会看到<code>handle</code>方法的签名一般是这样的：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Handle an incoming request.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span><br><span class="line"> * <span class="doctag">@param</span>  \Closure  $next</span><br><span class="line"> * <span class="doctag">@return</span> mixed</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request, Closure $next)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> 处理</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $next($request);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就正如装饰者模式所描述一样，请求每经过一个中间件就会进行一次包装，然后返回包装后的闭包函数执行结果，此<code>$next</code>正是<code>getSlice</code>所返回的匿名函数返回的闭包函数。</p>
+<p><strong>后话：正是这个请求管道处理类，使得Laravel对请求的处理显得如此的“优雅”，每一个请求进来，一道道的工序复杂处理，这些都对开发者进行了隐藏，使得开发者只需要关注每一道工序中我们需要干什么，怎么做，不用去关心工序的执行，全都交给框架进行处理，使得开发者关注点更加关心应用的业务而不是实现流程细节，就像<a href="https://github.com/JimChenWYU/my-php-awesome/tree/master/learning-php-design-patterns/TemplateMethod" target="_blank" rel="external">模板方法模式</a>一样，这就是我所理解的“优雅”</strong>。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您的支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/pay/alipay.png" alt="Jim_Chen Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PHP/" rel="tag">#PHP</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/02/Request-pipeline/" rel="next" title="一步步带你理解请求处理管道">
+                <i class="fa fa-chevron-left"></i> 一步步带你理解请求处理管道
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar/20160420.jpg"
+               alt="Jim_Chen" />
+          <p class="site-author-name" itemprop="name">Jim_Chen</p>
+          <p class="site-description motion-element" itemprop="description">Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JimChenWYU" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/JimChenPHPer" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#大致请求流程"><span class="nav-number">1.</span> <span class="nav-text">大致请求流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深入Kernel类"><span class="nav-number">2.</span> <span class="nav-text">深入Kernel类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求管道处理分析"><span class="nav-number">3.</span> <span class="nav-text">请求管道处理分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求管道处理关键"><span class="nav-number">4.</span> <span class="nav-text">请求管道处理关键</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jim_Chen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jimchen';
+      var disqus_identifier = '2017/05/03/Request-Pipeline-in-Laravel/';
+      var disqus_title = '一步步带你理解Laravel中的请求管道';
+      var disqus_url = 'http://blog.chenjunwu.com/2017/05/03/Request-Pipeline-in-Laravel/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.html";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+  
+
+  
+
+  
+  
+</body>
+</html>

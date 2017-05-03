@@ -4,8 +4,28 @@
 
     
   <url>
+    <loc>http://blog.chenjunwu.com/2017/05/03/Request-Pipeline-in-Laravel/</loc>
+    <lastmod>2017-05-03T07:11:39.074Z</lastmod>
+    <data>
+        <display>
+        <title>一步步带你理解Laravel中的请求管道</title>
+        <pubTime>2017-05-03T02:58:04.000Z</pubTime>
+        
+        <tag>PHP</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术类" url="http://blog.chenjunwu.com/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://blog.chenjunwu.com/2017/05/02/Request-pipeline/</loc>
-    <lastmod>2017-05-02T09:45:04.358Z</lastmod>
+    <lastmod>2017-05-03T06:19:23.497Z</lastmod>
     <data>
         <display>
         <title>一步步带你理解请求处理管道</title>
