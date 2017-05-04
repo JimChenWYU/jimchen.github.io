@@ -4,7 +4,27 @@
 
     
   <url>
-    <loc>https://blog.chenjunwu.cn/2017/05/04/Request-to-Response/</loc>
+    <loc>https://blog.chenjunwu.cn/2017/05/04/Request-to-Response2/</loc>
+    <lastmod>2017-05-04T09:52:03.163Z</lastmod>
+    <data>
+        <display>
+        <title>一步步带你理解Laravel请求到响应的生命周期（二）</title>
+        <pubTime>2017-05-04T08:49:14.000Z</pubTime>
+        
+        <tag>PHP</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术类" url="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://blog.chenjunwu.cn/2017/05/04/Request-to-Response1/</loc>
     <lastmod>2017-05-04T04:28:57.161Z</lastmod>
     <data>
         <display>
