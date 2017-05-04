@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.chenjunwu.cn/2017/05/04/Request-to-Response/</loc>
+    
+    <lastmod>2017-05-04T04:28:57.161Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.chenjunwu.cn/about/index.html</loc>
     
     <lastmod>2017-05-03T13:41:20.318Z</lastmod>
