@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="PHP," />
+  <meta name="keywords" content="Jim_Chen的小站,Jim_Chen的博客,陈君武的博客,君武博客,Jim_Chen" />
 
 
 
@@ -86,16 +86,15 @@
 
 
 
-<meta name="description" content="当配置Homestead多站点时，发现直接在Homestead.yaml配置是不可以的。当执行了homestead provision后面的站点会覆盖前面的站点，导致配置的多站点无法生效，这是一个坑呀。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Homestead添加多站点的坑">
-<meta property="og:url" content="https://blog.chenjunwu.cn/2017/04/03/homestead/index.html">
+<meta name="description" content="Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Jim_Chen 的小站">
+<meta property="og:url" content="https://blog.chenjunwu.cn/archives/2017/05/page/2/index.html">
 <meta property="og:site_name" content="Jim_Chen 的小站">
-<meta property="og:description" content="当配置Homestead多站点时，发现直接在Homestead.yaml配置是不可以的。当执行了homestead provision后面的站点会覆盖前面的站点，导致配置的多站点无法生效，这是一个坑呀。">
-<meta property="og:updated_time" content="2017-04-03T02:01:24.914Z">
+<meta property="og:description" content="Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Homestead添加多站点的坑">
-<meta name="twitter:description" content="当配置Homestead多站点时，发现直接在Homestead.yaml配置是不可以的。当执行了homestead provision后面的站点会覆盖前面的站点，导致配置的多站点无法生效，这是一个坑呀。">
+<meta name="twitter:title" content="Jim_Chen 的小站">
+<meta name="twitter:description" content="Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度">
 
 
 
@@ -113,7 +112,7 @@
   };
 </script>
 
-  <title> Homestead添加多站点的坑 | Jim_Chen 的小站 </title>
+  <title> 归档 | Jim_Chen 的小站 </title>
   <!-- 自定义引入Service Worker -->
   <script>
     (function () {
@@ -152,7 +151,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  page-archive  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -263,176 +262,70 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-collapse">
+    <span class="archive-move-on"></span>
+
+    <span class="archive-page-counter">
+      
+      
+      
+        
+      
+      嗯..! 目前共计 25 篇日志。 继续努力。
+    </span>
+
     
 
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                Homestead添加多站点的坑
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-03T09:24:12+08:00" content="2017-04-03">
-              2017-04-03
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/技术类/" itemprop="url" rel="index">
-                    <span itemprop="name">技术类</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/04/03/homestead/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/04/03/homestead/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
-      
-        <p>当配置Homestead多站点时，发现直接在Homestead.yaml配置是不可以的。当执行了<code>homestead provision</code>后面的站点会覆盖前面的站点，导致配置的多站点无法生效，这是一个坑呀。</p>
-<a id="more"></a>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><ol>
-<li><p>如果我们开启homestead之后，使用ssh登录，就会找到多站点配置的地方<code>/etc/nginx/sites-enable/</code>。</p>
-</li>
-<li><p>之后我们通过命令<code>ls /vagrant/scripts</code>发现有一个脚本<code>serve-laravel.sh</code>。</p>
-</li>
-<li><p>所以我们通过命令<code>sudo /vagrant/scripts/serve-laravel.sh application.app /home/vagrant/Code/application/public</code>，这样<code>/etc/nginx/sites-enable/</code>就会多出<code>application.app</code>文件夹，此时由于homestead的fpm模块配置错误，我们还需要进入<code>application.app</code>修改nginx的fpm配置，这样重启homestead之后，就可以通过<code>http://application.app</code>访问你的应用了。</p>
-</li>
-</ol>
-
-      
-    </div>
-
-    <div>
       
         
-      
-    </div>
-
-    <div>
-      
-        
-  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-    <div>谢谢您的支持！</div>
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-      <span>赏</span>
-    </button>
-    <div id="QR" style="display: none;">
-      
-      
-        <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="/images/pay/alipay.png" alt="Jim_Chen Alipay"/>
-          <p>支付宝打赏</p>
+        <div class="collection-title">
+          <h2 class="archive-year motion-element" id="archive-year-2017">2017</h2>
         </div>
       
-    </div>
-  </div>
-
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/PHP/" rel="tag">#PHP</a>
-          
-        </div>
       
 
       
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/03/26/factory-pattern/" rel="next" title="简单工厂，工厂和抽象工厂的区别">
-                <i class="fa fa-chevron-left"></i> 简单工厂，工厂和抽象工厂的区别
-              </a>
-            
-          </div>
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/08/php-Q-A-2/" rel="prev" title="php-Q&A-2">
-                php-Q&A-2 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
 
-      
-      
-    </footer>
+      <h1 class="post-title">
+        
+            <a class="post-title-link" href="/2017/05/01/Service-provider/" itemprop="url">
+              
+                <span itemprop="name">一步步带你实现一个服务提供者</span>
+              
+            </a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2017-05-01T16:23:54+08:00"
+              content="2017-05-01" >
+          05-01
+        </time>
+      </div>
+
+    </header>
   </article>
 
 
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+    
+
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/archives/2017/05/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/2017/05/">1</a><span class="page-number current">2</span>
+  </nav>
+
+
 
 
           </div>
@@ -440,17 +333,6 @@
 
 
           
-  <div class="comments" id="comments">
-    
-      <div id="disqus_thread">
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -470,17 +352,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar/20160420.jpg"
@@ -557,17 +430,6 @@
 
       </section>
 
-      
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法"><span class="nav-number">1.</span> <span class="nav-text">解决方法</span></a></li></ol></div>
-            
-          </div>
-        </section>
       
 
     </div>
@@ -671,9 +533,11 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
+  
+    <script type="text/javascript" id="motion.page.archive">
+      $('.archive-year').velocity('transition.slideLeftIn');
+    </script>
+  
 
 
   
@@ -691,9 +555,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'jimchen';
-      var disqus_identifier = '2017/04/03/homestead/';
-      var disqus_title = 'Homestead添加多站点的坑';
-      var disqus_url = 'https://blog.chenjunwu.cn/2017/04/03/homestead/';
+      var disqus_identifier = 'archives/2017/05/page/2/index.html';
+      var disqus_title = '';
+      var disqus_url = '';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -704,8 +568,6 @@
       }
 
       run_disqus_script('count.js');
-      
-        run_disqus_script('embed.js');
       
     </script>
   

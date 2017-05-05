@@ -1,0 +1,862 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PHP," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jim_Chen 的小站" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Laravel5.1 源码导读系列教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一步步带你理解Laravel请求到响应的生命周期（三）">
+<meta property="og:url" content="https://blog.chenjunwu.cn/2017/05/05/Request-to-Response3/index.html">
+<meta property="og:site_name" content="Jim_Chen 的小站">
+<meta property="og:description" content="Laravel5.1 源码导读系列教程">
+<meta property="og:updated_time" content="2017-05-05T03:42:04.019Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一步步带你理解Laravel请求到响应的生命周期（三）">
+<meta name="twitter:description" content="Laravel5.1 源码导读系列教程">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 一步步带你理解Laravel请求到响应的生命周期（三） | Jim_Chen 的小站 </title>
+  <!-- 自定义引入Service Worker -->
+  <script>
+    (function () {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js');
+      }
+    }())
+  </script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?847b8ae18c9ed40e9f63186ba0592e56";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Jim_Chen 的小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Walk steps step by step!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                一步步带你理解Laravel请求到响应的生命周期（三）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-05-05T09:35:19+08:00" content="2017-05-05">
+              2017-05-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术类/" itemprop="url" rel="index">
+                    <span itemprop="name">技术类</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/05/05/Request-to-Response3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/05/05/Request-to-Response3/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Laravel5.1 源码导读系列教程</p>
+<a id="more"></a>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a href="/2017/05/04/Request-to-Response2/">之前</a>我们了解了到请求实例获取的流程，那么当拥有了请求实例对象时，就要对请求进行处理来生成响应，但是接下来并不是直接就开始处理请求，而是又需要一个准备阶段。</p>
+<p>还是从入口文件index.php入手，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$response = $kernel-&gt;handle(</span><br><span class="line">    $request = Illuminate\Http\Request::capture()</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>我们知道生成请求实例后会直接交给<code>Kernel</code>类对象的<code>handle</code>方法处理，<a href="/2017/05/03/Request-Pipeline-in-Laravel/">之前</a>我们也大致说<code>handle</code>方法处理过程，那么这里我不再复述，而是我们看看到底准备了什么工作。</p>
+<h2 id="Bootstrap"><a href="#Bootstrap" class="headerlink" title="Bootstrap"></a>Bootstrap</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Send the given request through the middleware / router.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span><br><span class="line"> * <span class="doctag">@return</span> \Illuminate\Http\Response</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">sendRequestThroughRouter</span><span class="params">($request)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $this-&gt;app-&gt;instance(<span class="string">'request'</span>, $request);</span><br><span class="line"></span><br><span class="line">    Facade::clearResolvedInstance(<span class="string">'request'</span>);</span><br><span class="line">    <span class="comment">// 关注</span></span><br><span class="line">    $this-&gt;bootstrap();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">new</span> Pipeline($this-&gt;app))</span><br><span class="line">                -&gt;send($request)</span><br><span class="line">                -&gt;through($this-&gt;app-&gt;shouldSkipMiddleware() ? [] : $this-&gt;middleware)</span><br><span class="line">                -&gt;then($this-&gt;dispatchToRouter());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="/2017/05/03/Request-Pipeline-in-Laravel/">之前</a>我们并没有讲到<code>bootstrap</code>方法的作用，那么现在我们可以说了，它就是在我们进入请求处理管道时准备工作，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * The bootstrap classes for the application.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@var</span> array</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> $bootstrappers = [</span><br><span class="line">    <span class="string">'Illuminate\Foundation\Bootstrap\DetectEnvironment'</span>,</span><br><span class="line">    <span class="string">'Illuminate\Foundation\Bootstrap\LoadConfiguration'</span>,</span><br><span class="line">    <span class="string">'Illuminate\Foundation\Bootstrap\ConfigureLogging'</span>,</span><br><span class="line">    <span class="string">'Illuminate\Foundation\Bootstrap\HandleExceptions'</span>,</span><br><span class="line">    <span class="string">'Illuminate\Foundation\Bootstrap\RegisterFacades'</span>,</span><br><span class="line">    <span class="string">'Illuminate\Foundation\Bootstrap\RegisterProviders'</span>,</span><br><span class="line">    <span class="string">'Illuminate\Foundation\Bootstrap\BootProviders'</span>,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Bootstrap the application for HTTP requests.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@return</span> void</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">bootstrap</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (! $this-&gt;app-&gt;hasBeenBootstrapped()) &#123;</span><br><span class="line">        $this-&gt;app-&gt;bootstrapWith($this-&gt;bootstrappers());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Get the bootstrap classes for the application.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@return</span> array</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">bootstrappers</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $this-&gt;bootstrappers;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从这里我们就可以清楚了解到了，在准备阶段中我们有七个阶段，每个阶段都交由一个类来处理，在<code>Kernel</code>类中使用<code>$bootstrappers</code>数组维护着类名称，当进行<code>bootstrap</code>调用时，就会通过类名向服务容器请求启动七个阶段，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Run the given array of bootstrap classes.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  array  $bootstrappers</span><br><span class="line"> * <span class="doctag">@return</span> void</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">bootstrapWith</span><span class="params">(array $bootstrappers)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $this-&gt;hasBeenBootstrapped = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> ($bootstrappers <span class="keyword">as</span> $bootstrapper) &#123;</span><br><span class="line">        $this[<span class="string">'events'</span>]-&gt;fire(<span class="string">'bootstrapping: '</span>.$bootstrapper, [$this]);</span><br><span class="line">        <span class="comment">// 注意这里</span></span><br><span class="line">        $this-&gt;make($bootstrapper)-&gt;bootstrap($this);</span><br><span class="line"></span><br><span class="line">        $this[<span class="string">'events'</span>]-&gt;fire(<span class="string">'bootstrapped: '</span>.$bootstrapper, [$this]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从<code>Application</code>类可以看到，通过<code>make($bootstrapper)</code>对<code>$bootstrappers</code>里七个阶段的类进行实例化并调用它们各自的<code>bootstrap</code>方法来启动，实现准备工作。</p>
+<h2 id="环境检测和配置加载"><a href="#环境检测和配置加载" class="headerlink" title="环境检测和配置加载"></a>环境检测和配置加载</h2><p>那么首先我们先看看前两个阶段，分别找到<code>DetectEnvironment</code>类和<code>LoadConfiguration</code>类。</p>
+<p>在我们之前的<a href="/2017/04/29/env-in-Laravel5-1/">博文</a>有介绍过环境检测相关，其实就是把根目录下.env文件的key-valu值直接加载到环境变量中，是对程序运行的环境进行总体配置。</p>
+<p>配置加载，与环境检测类似，都是对应用程序运行时需要的配置进行加载，包括系统配置，数据库配置，session配置等，我们具体看看<code>LoadConfiguration</code>类的<code>bootstrap</code>方法。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Bootstrap the given application.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Contracts\Foundation\Application  $app</span><br><span class="line"> * <span class="doctag">@return</span> void</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">bootstrap</span><span class="params">(Application $app)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $items = [];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// First we will see if we have a cache configuration file. If we do, we'll load</span></span><br><span class="line">    <span class="comment">// the configuration items from that file so that it is very quick. Otherwise</span></span><br><span class="line">    <span class="comment">// we will need to spin through every configuration file and load them all.</span></span><br><span class="line">    <span class="keyword">if</span> (file_exists($cached = $app-&gt;getCachedConfigPath())) &#123;</span><br><span class="line">        $items = <span class="keyword">require</span> $cached;</span><br><span class="line"></span><br><span class="line">        $loadedFromCache = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $app-&gt;instance(<span class="string">'config'</span>, $config = <span class="keyword">new</span> Repository($items));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Next we will spin through all of the configuration files in the configuration</span></span><br><span class="line">    <span class="comment">// directory and load each one into the repository. This will make all of the</span></span><br><span class="line">    <span class="comment">// options available to the developer for use in various parts of this app.</span></span><br><span class="line">    <span class="keyword">if</span> (! <span class="keyword">isset</span>($loadedFromCache)) &#123;</span><br><span class="line">        $this-&gt;loadConfigurationFiles($app, $config);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    date_default_timezone_set($config[<span class="string">'app.timezone'</span>]);</span><br><span class="line"></span><br><span class="line">    mb_internal_encoding(<span class="string">'UTF-8'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先是判断一下缓存文件文件存在，此缓存文件就是在根目录下<code>app/bootstrap/cache/config.php</code>文件，该文件将所有配置文件都加载到同一个文件中，这样可以提高配置加载过程的速度，也算是框架的一个优化手段。如果存在此文件就会加载进来，由于此文件是返回一个配置数组，所以使用一个变量可以接受，然后注册到服务容器的共享数组，便于共享使用配置，这里我们可以看到，对于各项配置，Laravel会把它存放在一个仓库（Repository）中，然后共享数组保存的是这个仓库的一个实例，在<code>Repository</code>类，我们可以看到，它提供了更多的操作方法，这就是面向对象编程的好处–封装性。</p>
+<p>紧接着，如果根目录下<code>app/bootstrap/cache/config.php</code>文件不存在的话，我们就看到<code>loadConfigurationFiles($app, $config)</code>要执行加载配置文件了，这是程序第一次运行时必须要进行的操作，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Load the configuration items from all of the files.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Contracts\Foundation\Application  $app</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Contracts\Config\Repository  $repository</span><br><span class="line"> * <span class="doctag">@return</span> void</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">loadConfigurationFiles</span><span class="params">(Application $app, RepositoryContract $repository)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">foreach</span> ($this-&gt;getConfigurationFiles($app) <span class="keyword">as</span> $key =&gt; $path) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 通过仓库包装提供的方法可以进行配置，有效地进行操作</span></span><br><span class="line">        $repository-&gt;set($key, <span class="keyword">require</span> $path);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Get all of the configuration files for the application.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Contracts\Foundation\Application  $app</span><br><span class="line"> * <span class="doctag">@return</span> array</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getConfigurationFiles</span><span class="params">(Application $app)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $files = [];</span><br><span class="line"></span><br><span class="line">    $configPath = realpath($app-&gt;configPath());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (Finder::create()-&gt;files()-&gt;name(<span class="string">'*.php'</span>)-&gt;in($configPath) <span class="keyword">as</span> $file) &#123;</span><br><span class="line">        $nesting = $this-&gt;getConfigurationNesting($file, $configPath);</span><br><span class="line"></span><br><span class="line">        $files[$nesting.basename($file-&gt;getRealPath(), <span class="string">'.php'</span>)] = $file-&gt;getRealPath();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $files;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Get the configuration file nesting path.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Symfony\Component\Finder\SplFileInfo  $file</span><br><span class="line"> * <span class="doctag">@param</span>  string  $configPath</span><br><span class="line"> * <span class="doctag">@return</span> string</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getConfigurationNesting</span><span class="params">(SplFileInfo $file, $configPath)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $directory = dirname($file-&gt;getRealPath());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($tree = trim(str_replace($configPath, <span class="string">''</span>, $directory), DIRECTORY_SEPARATOR)) &#123;</span><br><span class="line">        $tree = str_replace(DIRECTORY_SEPARATOR, <span class="string">'.'</span>, $tree).<span class="string">'.'</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $tree;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>文件Illuminate\Config\Repository.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Set a given configuration value.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  array|string  $key</span><br><span class="line"> * <span class="doctag">@param</span>  mixed   $value</span><br><span class="line"> * <span class="doctag">@return</span> void</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">set</span><span class="params">($key, $value = null)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_array($key)) &#123;</span><br><span class="line">        <span class="keyword">foreach</span> ($key <span class="keyword">as</span> $innerKey =&gt; $innerValue) &#123;</span><br><span class="line">            Arr::set($this-&gt;items, $innerKey, $innerValue);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Arr::set($this-&gt;items, $key, $value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们首先看看<code>getConfigurationFiles($app)</code>会返回什么，其实就是通过服务容器在<a href="/2017/05/04/Request-to-Response1/">之前</a>提到的基础路径绑定中，先获取配置的目录，然后通过Symfony组件的<code>Finder</code>类实现文件识别，最终通过<code>getConfigurationNesting($file, $configPath)</code>获得文件路径，然后将文件名和文件路径通过关联数组的形式存储到<code>$files</code>数组中返回，所以<code>getConfigurationFiles($app)</code>会返回一个数组，key代表配置文件的名称，value代表文件路径，所以通过遍历，就可以获取到文件路径，通过<code>require</code>可以把文件加载，由于配置文件都是返回一个数组，所以<code>require</code>得到的都是一个数组。然后通过<code>set($key, $value)</code>保存到仓库中。</p>
+<p><strong>后话：当我们加载配置之后，我们就可以很方便的通过服务容器获取这些配置，比如<code>$app[&#39;config&#39;][&#39;app.debug&#39;]</code>或者<code>$app-&gt;make(&#39;config&#39;)-&gt;get(&#39;app.debug&#39;)</code>获取，至于为什么第一种方式是可以的呢，是因为服务容器<code>Container</code>类和<code>Repository</code>类都实现了<code>ArrayAccess</code>（数组访问）原生接口，只要实现接口的<code>offsetGet($key)</code>方法，当通过<code>$app[&#39;config&#39;]</code>使用时就会自动调用该方法执行<code>$app-&gt;make(&#39;config&#39;)</code>类似的操作，具体查看源代码可知。</strong></p>
+<p><strong>由于篇幅过大，七个阶段将分开介绍，这次就只介绍两个阶段：环境检测和配置加载。</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您的支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/pay/alipay.png" alt="Jim_Chen Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PHP/" rel="tag">#PHP</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/04/Request-to-Response2/" rel="next" title="一步步带你理解Laravel请求到响应的生命周期（二）">
+                <i class="fa fa-chevron-left"></i> 一步步带你理解Laravel请求到响应的生命周期（二）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar/20160420.jpg"
+               alt="Jim_Chen" />
+          <p class="site-author-name" itemprop="name">Jim_Chen</p>
+          <p class="site-description motion-element" itemprop="description">Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">25</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JimChenWYU" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/JimChenPHPer/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bootstrap"><span class="nav-number">2.</span> <span class="nav-text">Bootstrap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境检测和配置加载"><span class="nav-number">3.</span> <span class="nav-text">环境检测和配置加载</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jim_Chen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jimchen';
+      var disqus_identifier = '2017/05/05/Request-to-Response3/';
+      var disqus_title = '一步步带你理解Laravel请求到响应的生命周期（三）';
+      var disqus_url = 'https://blog.chenjunwu.cn/2017/05/05/Request-to-Response3/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.html";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+  
+
+  
+
+  
+  
+</body>
+</html>
