@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Jim_Chen的小站,Jim_Chen的博客,陈君武的博客,君武博客,Jim_Chen" />
+  <meta name="keywords" content="PHP,Laravel5.1源码导读," />
 
 
 
@@ -86,15 +86,16 @@
 
 
 
-<meta name="description" content="Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Jim_Chen 的小站">
-<meta property="og:url" content="https://blog.chenjunwu.cn/page/6/index.html">
+<meta name="description" content="Laravel5.1 源码导读系列教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一步步带你理解Laravel请求到响应的生命周期（六）">
+<meta property="og:url" content="https://blog.chenjunwu.cn/2017/05/07/Request-to-Response6/index.html">
 <meta property="og:site_name" content="Jim_Chen 的小站">
-<meta property="og:description" content="Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度">
+<meta property="og:description" content="Laravel5.1 源码导读系列教程">
+<meta property="og:updated_time" content="2017-05-07T05:42:38.483Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jim_Chen 的小站">
-<meta name="twitter:description" content="Jim_Chen 的博客，记录了Jim_Chen的学习经历与知识维度">
+<meta name="twitter:title" content="一步步带你理解Laravel请求到响应的生命周期（六）">
+<meta name="twitter:description" content="Laravel5.1 源码导读系列教程">
 
 
 
@@ -112,7 +113,7 @@
   };
 </script>
 
-  <title> Jim_Chen 的小站 </title>
+  <title> 一步步带你理解Laravel请求到响应的生命周期（六） | Jim_Chen 的小站 </title>
   <!-- 自定义引入Service Worker -->
   <script>
     (function () {
@@ -151,9 +152,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -263,9 +262,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -285,10 +284,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/05/11/synchronous-blocking-asynchronous-non-blocking/" itemprop="url">
-                  同步，异步，阻塞，非阻塞
-                </a>
+                一步步带你理解Laravel请求到响应的生命周期（六）
               
             
           </h1>
@@ -300,8 +296,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-11T09:32:51+08:00" content="2016-05-11">
-              2016-05-11
+            <time itemprop="dateCreated" datetime="2017-05-07T12:46:26+08:00" content="2017-05-07">
+              2017-05-07
             </time>
           </span>
 
@@ -330,8 +326,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/05/11/synchronous-blocking-asynchronous-non-blocking/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/05/11/synchronous-blocking-asynchronous-non-blocking/" itemprop="commentsCount"></span>
+                <a href="/2017/05/07/Request-to-Response6/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/05/07/Request-to-Response6/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -354,275 +350,98 @@
       
 
       
-        
-          <p>博主想谈谈自己对于同步，异步，阻塞，非阻塞四个概念认识和理解，语言以JavaScript为基础展开谈论，初学，有错纠正。</p>
-<h2 id="开始啦！"><a href="#开始啦！" class="headerlink" title="开始啦！"></a>开始啦！</h2><!-- ![异步与同步](/images/asset/2016/c10f0ff42939d0.png) -->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/05/11/synchronous-blocking-asynchronous-non-blocking/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+        <p>Laravel5.1 源码导读系列教程</p>
+<a id="more"></a>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>好了，讲完前面六大步骤，都是关于其他服务怎么注册到框架中来，那么接下来就是要启动这些服务了。</p>
+<h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><p>前面系列也讲过，服务提供者必须要shixian<code>register()</code>方法，还有一个方法<code>boot()</code>看需要是否实现，主要英语启动服务，那么对于实现了<code>boot()</code>方法的服务提供者，会通过<code>BootProviders</code>类进行统一管理调用。</p>
+<p>文件<code>Illuminate\Contracts\Foundation\Application.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Bootstrap the given application.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Contracts\Foundation\Application  $app</span><br><span class="line"> * <span class="doctag">@return</span> void</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">bootstrap</span><span class="params">(Application $app)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $app-&gt;boot();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于启动类来说，实现就是调用服务容器的<code>boot()</code>方法，因为服务提供者的信息早已在注册阶段绑定到服务容器上。</p>
+<p>文件<code>Illuminate\Foundation\Application.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Boot the application's service providers.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@return</span> void</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">boot</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($this-&gt;booted) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Once the application has booted we will also fire some "booted" callbacks</span></span><br><span class="line">    <span class="comment">// for any listeners that need to do work after this initial booting gets</span></span><br><span class="line">    <span class="comment">// finished. This is useful when ordering the boot-up processes we run.</span></span><br><span class="line">    $this-&gt;fireAppCallbacks($this-&gt;bootingCallbacks);</span><br><span class="line"></span><br><span class="line">    array_walk($this-&gt;serviceProviders, <span class="function"><span class="keyword">function</span> <span class="params">($p)</span> </span>&#123;</span><br><span class="line">        $this-&gt;bootProvider($p);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    $this-&gt;booted = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    $this-&gt;fireAppCallbacks($this-&gt;bootedCallbacks);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意这里：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">array_walk($this-&gt;serviceProviders, <span class="function"><span class="keyword">function</span> <span class="params">($p)</span> </span>&#123;</span><br><span class="line">    $this-&gt;bootProvider($p);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>我们通过<code>array_walk()</code>方法，通过回调的方式处理<code>$serviceProviders</code>数组的每一个元素，在<a href="/2017/05/06/Request-to-Response5/">上一节</a>就有提到过，是保存着两个基础服务提供者实例，<code>when</code><br>类服务提供者，<code>eager</code>类服务提供者。对于每个服务提供者实例，都通过<code>bootProvider()</code>启动，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Boot the given service provider.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Support\ServiceProvider  $provider</span><br><span class="line"> * <span class="doctag">@return</span> mixed</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">bootProvider</span><span class="params">(ServiceProvider $provider)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (method_exists($provider, <span class="string">'boot'</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> $this-&gt;call([$provider, <span class="string">'boot'</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Call the given Closure / class<span class="doctag">@method</span> and inject its dependencies.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  callable|string  $callback</span><br><span class="line"> * <span class="doctag">@param</span>  array  $parameters</span><br><span class="line"> * <span class="doctag">@param</span>  string|null  $defaultMethod</span><br><span class="line"> * <span class="doctag">@return</span> mixed</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">call</span><span class="params">($callback, array $parameters = [], $defaultMethod = null)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($this-&gt;isCallableWithAtSign($callback) || $defaultMethod) &#123;</span><br><span class="line">        <span class="keyword">return</span> $this-&gt;callClass($callback, $parameters, $defaultMethod);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $dependencies = $this-&gt;getMethodDependencies($callback, $parameters);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> call_user_func_array($callback, $dependencies);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里就<a href="/2017/05/04/Request-to-Response1/">之前</a>讲到，服务提供者启动，就是通过<code>call()</code>方法调用实例的<code>boot()</code>方法进行启动服务，通过<code>getMethodDependencies()</code>方法解决方法调用时函数参数依赖，通过<code>call_user_func_array()</code>进行函数调用。</p>
+<p><strong>总结：至此，请求处理准备的七大阶段都讲完，完整流程如下：</strong></p>
+<ul>
+<li><strong>环境检测</strong></li>
+<li><strong>配置加载</strong></li>
+<li><strong>日志配置</strong></li>
+<li><strong>异常处理</strong></li>
+<li><strong>外观注册</strong></li>
+<li><strong>服务提供者注册</strong></li>
+<li><strong>启动服务</strong></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
         
       
     </div>
 
     <div>
       
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢您的支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/pay/alipay.png" alt="Jim_Chen Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
     </div>
+  </div>
 
-    <div>
+
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/03/learn-to-make-git-server/" itemprop="url">
-                  10分钟避坑搭建git服务器
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-03T23:19:40+08:00" content="2016-05-03">
-              2016-05-03
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/技术类/" itemprop="url" rel="index">
-                    <span itemprop="name">技术类</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
+            <a href="/tags/PHP/" rel="tag">#PHP</a>
           
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/03/learn-to-make-git-server/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/05/03/learn-to-make-git-server/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
+            <a href="/tags/Laravel5-1源码导读/" rel="tag">#Laravel5.1源码导读</a>
           
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <p>这次博主总结了一下自己如何在Linux上搭建自己的git服务器，并且可以完成自动部署<br>本次用到Linux的发行版centos7</p>
-<h2 id="废话不多说，动手是关键！"><a href="#废话不多说，动手是关键！" class="headerlink" title="废话不多说，动手是关键！"></a>废话不多说，动手是关键！</h2>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/05/03/learn-to-make-git-server/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/06/Request-to-Response5/" rel="next" title="一步步带你理解Laravel请求到响应的生命周期（五）">
+                <i class="fa fa-chevron-left"></i> 一步步带你理解Laravel请求到响应的生命周期（五）
+              </a>
+            
           </div>
-        
-      
-    </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+          <div class="post-nav-prev post-nav-item">
             
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/03/hello-world/" itemprop="url">
-                  您好, Jim_Chen
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-03T13:24:02+08:00" content="2016-05-03">
-              2016-05-03
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/03/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/05/03/hello-world/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <p>欢迎来到 <a href="https://hexo.io/">Hexo</a>! 这是给您的第一份信息。可以到点击这里 <a href="https://hexo.io/docs/">documentation</a> 获取更多信息。如果您使用Hexo时有任何问题，可以通过 <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> 找到您要的答案或者在 <a href="https://github.com/hexojs/hexo/issues">GitHub</a> 给我留言。<br><!-- Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](https://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues). --></p>
-<!-- ## Quick Start -->
-<h2 id="让我们开始吧！"><a href="#让我们开始吧！" class="headerlink" title="让我们开始吧！"></a>让我们开始吧！</h2>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/05/03/hello-world/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -630,6 +449,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -649,8 +479,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar/20160420.jpg"
@@ -727,6 +566,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动服务"><span class="nav-number">2.</span> <span class="nav-text">启动服务</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -830,6 +680,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
@@ -846,9 +700,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'jimchen';
-      var disqus_identifier = 'page/6/index.html';
-      var disqus_title = '';
-      var disqus_url = '';
+      var disqus_identifier = '2017/05/07/Request-to-Response6/';
+      var disqus_title = '一步步带你理解Laravel请求到响应的生命周期（六）';
+      var disqus_url = 'https://blog.chenjunwu.cn/2017/05/07/Request-to-Response6/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -859,6 +713,8 @@
       }
 
       run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
       
     </script>
   
