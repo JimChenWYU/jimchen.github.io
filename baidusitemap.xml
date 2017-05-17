@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>https://blog.chenjunwu.cn/2017/05/03/Request-Pipeline-in-Laravel/</loc>
+    <lastmod>2017-05-17T14:31:44.288Z</lastmod>
+    <data>
+        <display>
+        <title>一步步带你理解Laravel中的请求管道</title>
+        <pubTime>2017-05-03T02:58:04.000Z</pubTime>
+        
+        <tag>PHP</tag>
+         
+        <tag>Laravel5.1源码导读</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术类" url="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://blog.chenjunwu.cn/2017/05/07/Request-to-Response6/</loc>
     <lastmod>2017-05-07T05:42:38.483Z</lastmod>
     <data>
@@ -142,28 +164,6 @@
         <display>
         <title>一步步带你理解Laravel请求到响应的生命周期（四）</title>
         <pubTime>2017-05-05T09:02:06.000Z</pubTime>
-        
-        <tag>PHP</tag>
-         
-        <tag>Laravel5.1源码导读</tag>
-         
-         
-           
-             
-              <breadCrumb title="技术类" url="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://blog.chenjunwu.cn/2017/05/03/Request-Pipeline-in-Laravel/</loc>
-    <lastmod>2017-05-06T03:50:04.261Z</lastmod>
-    <data>
-        <display>
-        <title>一步步带你理解Laravel中的请求管道</title>
-        <pubTime>2017-05-03T02:58:04.000Z</pubTime>
         
         <tag>PHP</tag>
          

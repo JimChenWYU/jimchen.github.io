@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.chenjunwu.cn/2017/05/03/Request-Pipeline-in-Laravel/</loc>
+    
+    <lastmod>2017-05-17T14:31:44.288Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.chenjunwu.cn/2017/05/07/Request-to-Response6/</loc>
     
     <lastmod>2017-05-07T05:42:38.483Z</lastmod>
@@ -47,13 +54,6 @@
     <loc>https://blog.chenjunwu.cn/2017/05/05/Request-to-Response4/</loc>
     
     <lastmod>2017-05-06T03:50:07.330Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.chenjunwu.cn/2017/05/03/Request-Pipeline-in-Laravel/</loc>
-    
-    <lastmod>2017-05-06T03:50:04.261Z</lastmod>
     
   </url>
   
