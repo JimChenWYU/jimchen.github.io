@@ -94,7 +94,7 @@
 <meta property="og:description" content="nginx 学习记录">
 <meta property="og:image" content="https://blog.chenjunwu.cn/images/asset/2017/2017-05-22_141338.png">
 <meta property="og:image" content="https://blog.chenjunwu.cn/images/asset/2017/2017-05-22_142543.png">
-<meta property="og:updated_time" content="2017-05-22T06:54:32.958Z">
+<meta property="og:updated_time" content="2017-05-22T06:56:21.085Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="nginx静态资源压缩">
 <meta name="twitter:description" content="nginx 学习记录">
@@ -336,15 +336,9 @@
       
         <p>nginx 学习记录</p>
 <a id="more"></a>
-<ol>
-<li>一般情况</li>
-</ol>
-<p>如果nginx对静态资源不做任何处理时，当浏览器异步加载静态资源时，首屏等待时间就会很长，对的即使前端资源都经过webpack来打包处理，由于项目使用的第三方库非常多的话，打包之后vendor也会非常的大，</p>
+<h2 id="一般情况"><a href="#一般情况" class="headerlink" title="一般情况"></a>一般情况</h2><p>如果nginx对静态资源不做任何处理时，当浏览器异步加载静态资源时，首屏等待时间就会很长，对的即使前端资源都经过webpack来打包处理，由于项目使用的第三方库非常多的话，打包之后vendor也会非常的大，</p>
 <p><img src="/images/asset/2017/2017-05-22_141338.png" alt=""></p>
-<ol>
-<li>开启gzip压缩</li>
-</ol>
-<p>如果服务端与浏览器都允许gzip压缩，那么将会大大降低静态资源传输的效率</p>
+<h2 id="开启gzip压缩"><a href="#开启gzip压缩" class="headerlink" title="开启gzip压缩"></a>开启gzip压缩</h2><p>如果服务端与浏览器都允许gzip压缩，那么将会大大降低静态资源传输的效率</p>
 <p><img src="/images/asset/2017/2017-05-22_142543.png" alt=""></p>
 <p>在nginx.conf配置如下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># open gzip compress static resources</span></span><br><span class="line">gzip on; <span class="comment"># 开启gzip压缩</span></span><br><span class="line">gzip_min_length 1k; <span class="comment"># 启用gzip压缩的最小文件，小于设置的文件不会被压缩</span></span><br><span class="line">gzip_buffers 16 64k; <span class="comment"># 缓冲区 16为缓冲区个数，64k为缓冲区大小，缓冲区大小是根据系统内存页而定，依赖平台设置</span></span><br><span class="line">gzip_http_version 1.1; <span class="comment"># 可进行gzip压缩的http协议版本</span></span><br><span class="line">gzip_comp_level 6; <span class="comment"># 压缩级别，1-10，数字越大压缩越好但是占用CPU时间也越多</span></span><br><span class="line">gzip_types text/plain application/javascript text/css application/xml application/json; <span class="comment"># 进行压缩的文件类型。不用添加text/html，nginx默认支持</span></span><br><span class="line">gzip_vary on; <span class="comment"># 是否在http头部添加Vary: Accept-Encoding，建议开启</span></span><br><span class="line">gzip_<span class="built_in">disable</span> <span class="string">"MSIE [1-6]\."</span>; <span class="comment"># 禁用IE 6以下gzip</span></span><br><span class="line">gzip_proxied off; <span class="comment"># 对代理请求响应是否开启gzip压缩，可供选择参数有很多</span></span><br></pre></td></tr></table></figure>
@@ -550,7 +544,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一般情况"><span class="nav-number">1.</span> <span class="nav-text">一般情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开启gzip压缩"><span class="nav-number">2.</span> <span class="nav-text">开启gzip压缩</span></a></li></ol></div>
             
           </div>
         </section>

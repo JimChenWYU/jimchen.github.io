@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://blog.chenjunwu.cn/"/>
-  <updated>2017-05-22T06:54:32.958Z</updated>
+  <updated>2017-05-22T06:56:21.085Z</updated>
   <id>https://blog.chenjunwu.cn/</id>
   
   <author>
@@ -20,19 +20,13 @@
     <link href="https://blog.chenjunwu.cn/2017/05/22/nginx-compress/"/>
     <id>https://blog.chenjunwu.cn/2017/05/22/nginx-compress/</id>
     <published>2017-05-22T06:01:18.000Z</published>
-    <updated>2017-05-22T06:54:32.958Z</updated>
+    <updated>2017-05-22T06:56:21.085Z</updated>
     
     <content type="html">&lt;p&gt;nginx 学习记录&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;ol&gt;
-&lt;li&gt;一般情况&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;如果nginx对静态资源不做任何处理时，当浏览器异步加载静态资源时，首屏等待时间就会很长，对的即使前端资源都经过webpack来打包处理，由于项目使用的第三方库非常多的话，打包之后vendor也会非常的大，&lt;/p&gt;
+&lt;h2 id=&quot;一般情况&quot;&gt;&lt;a href=&quot;#一般情况&quot; class=&quot;headerlink&quot; title=&quot;一般情况&quot;&gt;&lt;/a&gt;一般情况&lt;/h2&gt;&lt;p&gt;如果nginx对静态资源不做任何处理时，当浏览器异步加载静态资源时，首屏等待时间就会很长，对的即使前端资源都经过webpack来打包处理，由于项目使用的第三方库非常多的话，打包之后vendor也会非常的大，&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/images/asset/2017/2017-05-22_141338.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;开启gzip压缩&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;如果服务端与浏览器都允许gzip压缩，那么将会大大降低静态资源传输的效率&lt;/p&gt;
+&lt;h2 id=&quot;开启gzip压缩&quot;&gt;&lt;a href=&quot;#开启gzip压缩&quot; class=&quot;headerlink&quot; title=&quot;开启gzip压缩&quot;&gt;&lt;/a&gt;开启gzip压缩&lt;/h2&gt;&lt;p&gt;如果服务端与浏览器都允许gzip压缩，那么将会大大降低静态资源传输的效率&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/images/asset/2017/2017-05-22_142543.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;p&gt;在nginx.conf配置如下&lt;/p&gt;
 &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# open gzip compress static resources&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gzip on; &lt;span class=&quot;comment&quot;&gt;# 开启gzip压缩&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gzip_min_length 1k; &lt;span class=&quot;comment&quot;&gt;# 启用gzip压缩的最小文件，小于设置的文件不会被压缩&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gzip_buffers 16 64k; &lt;span class=&quot;comment&quot;&gt;# 缓冲区 16为缓冲区个数，64k为缓冲区大小，缓冲区大小是根据系统内存页而定，依赖平台设置&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gzip_http_version 1.1; &lt;span class=&quot;comment&quot;&gt;# 可进行gzip压缩的http协议版本&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gzip_comp_level 6; &lt;span class=&quot;comment&quot;&gt;# 压缩级别，1-10，数字越大压缩越好但是占用CPU时间也越多&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gzip_types text/plain application/javascript text/css application/xml application/json; &lt;span class=&quot;comment&quot;&gt;# 进行压缩的文件类型。不用添加text/html，nginx默认支持&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gzip_vary on; &lt;span class=&quot;comment&quot;&gt;# 是否在http头部添加Vary: Accept-Encoding，建议开启&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gzip_&lt;span class=&quot;built_in&quot;&gt;disable&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;MSIE [1-6]\.&quot;&lt;/span&gt;; &lt;span class=&quot;comment&quot;&gt;# 禁用IE 6以下gzip&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gzip_proxied off; &lt;span class=&quot;comment&quot;&gt;# 对代理请求响应是否开启gzip压缩，可供选择参数有很多&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
