@@ -1,15 +1,15 @@
 'use strict';
 
-const version = 'v20160440';
-const __DEVELOPMENT__ = false;
-const __DEBUG__ = false;
-const offlineResources = [
+var version = 'v20160440';
+var __DEVELOPMENT__ = false;
+var __DEBUG__ = false;
+var offlineResources = [
   '/',
   '/offline.html',
   '/offline.svg'
 ];
 
-const ignoreFetch = [
+var ignoreFetch = [
   // /http?:\/\/static.duoshuo.com\//,
   // /ws?:\/\/ws.duoshuo.com\//,
   // /http?:\/\/chenjunwu.duoshuo.com\//,
