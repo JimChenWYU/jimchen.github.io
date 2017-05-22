@@ -4,6 +4,69 @@
 
     
   <url>
+    <loc>https://blog.chenjunwu.cn/2017/05/22/nginx-compress/</loc>
+    <lastmod>2017-05-22T06:54:32.958Z</lastmod>
+    <data>
+        <display>
+        <title>nginx静态资源压缩</title>
+        <pubTime>2017-05-22T06:01:18.000Z</pubTime>
+        
+        <tag>服务器</tag>
+         
+        <tag>nginx</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://blog.chenjunwu.cn/2017/05/05/Request-to-Response4/</loc>
+    <lastmod>2017-05-18T03:05:32.990Z</lastmod>
+    <data>
+        <display>
+        <title>一步步带你理解Laravel请求到响应的生命周期（四）</title>
+        <pubTime>2017-05-05T09:02:06.000Z</pubTime>
+        
+        <tag>PHP</tag>
+         
+        <tag>Laravel5.1源码导读</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术类" url="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://blog.chenjunwu.cn/2017/05/04/Request-to-Response1/</loc>
+    <lastmod>2017-05-17T15:10:46.144Z</lastmod>
+    <data>
+        <display>
+        <title>一步步带你理解Laravel请求到响应的生命周期（一）</title>
+        <pubTime>2017-05-04T02:10:45.000Z</pubTime>
+        
+        <tag>PHP</tag>
+         
+        <tag>Laravel5.1源码导读</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术类" url="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://blog.chenjunwu.cn/2017/05/03/Request-Pipeline-in-Laravel/</loc>
     <lastmod>2017-05-17T14:31:44.288Z</lastmod>
     <data>
@@ -32,28 +95,6 @@
         <display>
         <title>一步步带你理解Laravel请求到响应的生命周期（六）</title>
         <pubTime>2017-05-07T04:46:26.000Z</pubTime>
-        
-        <tag>PHP</tag>
-         
-        <tag>Laravel5.1源码导读</tag>
-         
-         
-           
-             
-              <breadCrumb title="技术类" url="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://blog.chenjunwu.cn/2017/05/04/Request-to-Response1/</loc>
-    <lastmod>2017-05-07T05:36:00.308Z</lastmod>
-    <data>
-        <display>
-        <title>一步步带你理解Laravel请求到响应的生命周期（一）</title>
-        <pubTime>2017-05-04T02:10:45.000Z</pubTime>
         
         <tag>PHP</tag>
          
@@ -142,28 +183,6 @@
         <display>
         <title>一步步带你理解Laravel请求到响应的生命周期（三）</title>
         <pubTime>2017-05-05T01:35:19.000Z</pubTime>
-        
-        <tag>PHP</tag>
-         
-        <tag>Laravel5.1源码导读</tag>
-         
-         
-           
-             
-              <breadCrumb title="技术类" url="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://blog.chenjunwu.cn/2017/05/05/Request-to-Response4/</loc>
-    <lastmod>2017-05-06T03:50:07.330Z</lastmod>
-    <data>
-        <display>
-        <title>一步步带你理解Laravel请求到响应的生命周期（四）</title>
-        <pubTime>2017-05-05T09:02:06.000Z</pubTime>
         
         <tag>PHP</tag>
          
