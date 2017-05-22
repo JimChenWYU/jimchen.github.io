@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.chenjunwu.cn/sw.js</loc>
+    
+    <lastmod>2017-05-22T06:58:25.626Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.chenjunwu.cn/2017/05/22/nginx-compress/</loc>
     
     <lastmod>2017-05-22T06:56:21.085Z</lastmod>
@@ -89,13 +96,6 @@
     <loc>https://blog.chenjunwu.cn/2017/03/17/php-Q-A-1/</loc>
     
     <lastmod>2017-04-27T06:23:09.379Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.chenjunwu.cn/sw.js</loc>
-    
-    <lastmod>2017-04-08T13:34:19.355Z</lastmod>
     
   </url>
   
