@@ -4,6 +4,40 @@
   
     
     <entry>
+      <title><![CDATA[MySQL 设置用户可访问数据库]]></title>
+      <url>https://blog.chenjunwu.cn/2017/06/21/MySQL/</url>
+      <content type="html"><![CDATA[<p>MySQL 学习记录</p>
+<a id="more"></a>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>一般来说，我们每个项目基本都会涉及数据库，但是有可能会涉及多个数据库，那么在管理这些数据库的时候不能同时赋予所有权限给一个用户管理，这样风险很大，于是乎我们应该为每个用户赋予一定的权限来操作属于自己的管理范围内的数据库权限。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>可以先使用 MySQL 的 root 用户操作创建一个新的用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; CREATE USER username IDENTIFIED BY &apos;password&apos;;</span><br></pre></td></tr></table></figure>
+<p><strong>注意：记得密码需要加上单引号</strong></p>
+<p>当提示没有出现错误时，证明创建新用户成功，如果失败，请看错误原因，绝大数情况是用户名已经存在。</p>
+<p>现在新创建的用户还不可以使用，需要赋予权限才可以操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; GRANT ALL PRIVILEGES ON *.* TO &apos;username&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;password&apos;;</span><br></pre></td></tr></table></figure>
+<p>这样是授予 username 用户在所有数据库上的所有权限，如果要指定数据库需要这样设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; GRANT ALL PRIVILEGES ON *.* TO &apos;username&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;password&apos;;</span><br></pre></td></tr></table></figure>
+<p>这样是授予 username 用户在所有数据库上的所有权限，如果要指定数据库需要这样设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; REVOKE ALL PRIVILEGES ON *.* FROM &apos;username&apos;@&apos;localhost&apos;;</span><br><span class="line">mysql &gt; GRANT ALL PRIVILEGES ON my_db.* TO &apos;username&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;password&apos;;</span><br></pre></td></tr></table></figure>
+<p>首先撤销授予 username 的所有权限，再授予 username 用户在 my_db 数据库上的所有权限。</p>
+<p>甚至还可以指定该用户只能执行某些命令( select 和 update )：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; GRANT SELECT, UPDATE ON my_db.* TO &apos;username&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;password&apos;;</span><br></pre></td></tr></table></figure>
+<p>好了，当权限修改完毕之后别忘了要刷新</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+<p>这样，只要使用 username 登录时，只有 my_db 数据库是对该用户可显示和可操作的，具体的操作看分配的权限。</p>
+<h3 id="对外网关闭用户"><a href="#对外网关闭用户" class="headerlink" title="对外网关闭用户"></a>对外网关闭用户</h3><p>在 MySQL 中，有一个 mysql 数据库，其中 user 表负责管理所有的用户，我们可以使用SQL语句找到我们创建的用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; use mysql;</span><br><span class="line">mysql &gt; select * from user;</span><br></pre></td></tr></table></figure>
+<p>看到 Host 字段，% 代表任何 IP 都可以使用该用户进行连接数据库，localhost 表示本地连接数据库。通过更新记录可以禁止外网访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; UPDATE user SET Host=&apos;localhost&apos; WHERE Host=&apos;%&apos; AND User=&apos;username&apos;;</span><br></pre></td></tr></table></figure>
+<p>这样就禁止外网远程使用该用户连接，当然也可以指定特定 IP 允许特定 IP 使用该用户远程连接。</p>
+<h3 id="对外网关闭3306端口"><a href="#对外网关闭3306端口" class="headerlink" title="对外网关闭3306端口"></a>对外网关闭3306端口</h3><p>如果不想让外网访问数据库，直接对外网关闭3306端口无疑最方便的。</p>
+<p>找到my.cnf， 一般在 /etc/my.cnf，修改该文件如下行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bind-address=127.0.0.1</span><br></pre></td></tr></table></figure>
+<p>设置如上，3306端口就只对本地开放，在外网通过端口扫面会发现端口是关闭状态的。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[nginx静态资源压缩]]></title>
       <url>https://blog.chenjunwu.cn/2017/05/22/nginx-compress/</url>
       <content type="html"><![CDATA[<p>nginx 学习记录</p>

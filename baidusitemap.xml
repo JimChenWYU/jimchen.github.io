@@ -3,10 +3,28 @@
 
 
     
+  <url>
+    <loc>https://blog.chenjunwu.cn/2017/06/21/MySQL/</loc>
+    <lastmod>2017-06-22T02:56:08.208Z</lastmod>
+    <data>
+        <display>
+        <title>MySQL 设置用户可访问数据库</title>
+        <pubTime>2017-06-21T11:01:28.000Z</pubTime>
+        
+        <tag>服务器</tag>
+         
+        <tag>MySQL</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/05/22/nginx-compress/</loc>
-    <lastmod>2017-05-22T06:56:21.085Z</lastmod>
+    <lastmod>2017-06-22T01:59:27.006Z</lastmod>
     <data>
         <display>
         <title>nginx静态资源压缩</title>
@@ -22,6 +40,7 @@
     </data>
     </url>
 
+    
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/05/05/Request-to-Response4/</loc>
