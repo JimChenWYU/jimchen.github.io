@@ -1,6 +1,6 @@
 'use strict';
 
-var version = 'v20160440';
+var version = 'v20170701';
 var __DEVELOPMENT__ = false;
 var __DEBUG__ = false;
 var offlineResources = [
@@ -18,7 +18,6 @@ var ignoreFetch = [
   /http?:\/\/fonts.gstatic.com\//,
   /http?:\/\/a.disquscdn.com\//,
   /http?:\/\/disqus.com\//,
-  /https:\/\/blog.chenjunwu.cn\//
 ];
 
 
