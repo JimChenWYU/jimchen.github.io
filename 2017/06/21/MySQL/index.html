@@ -92,7 +92,7 @@
 <meta property="og:url" content="https://blog.chenjunwu.cn/2017/06/21/MySQL/index.html">
 <meta property="og:site_name" content="Jim_Chen 的小站">
 <meta property="og:description" content="MySQL 学习记录">
-<meta property="og:updated_time" content="2017-06-22T02:56:08.208Z">
+<meta property="og:updated_time" content="2017-07-01T03:47:53.207Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL 设置用户可访问数据库">
 <meta name="twitter:description" content="MySQL 学习记录">
@@ -358,7 +358,7 @@
 <h3 id="对外网关闭3306端口"><a href="#对外网关闭3306端口" class="headerlink" title="对外网关闭3306端口"></a>对外网关闭3306端口</h3><p>如果不想让外网访问数据库，直接对外网关闭3306端口无疑最方便的。</p>
 <p>找到my.cnf， 一般在 /etc/my.cnf，修改该文件如下行</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bind-address=127.0.0.1</span><br></pre></td></tr></table></figure>
-<p>设置如上，3306端口就只对本地开放，在外网通过端口扫面会发现端口是关闭状态的。</p>
+<p>设置如上，3306端口就只对本地开放，在外网通过端口扫描会发现端口是关闭状态的。</p>
 
       
     </div>

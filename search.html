@@ -33,7 +33,7 @@
 <h3 id="对外网关闭3306端口"><a href="#对外网关闭3306端口" class="headerlink" title="对外网关闭3306端口"></a>对外网关闭3306端口</h3><p>如果不想让外网访问数据库，直接对外网关闭3306端口无疑最方便的。</p>
 <p>找到my.cnf， 一般在 /etc/my.cnf，修改该文件如下行</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bind-address=127.0.0.1</span><br></pre></td></tr></table></figure>
-<p>设置如上，3306端口就只对本地开放，在外网通过端口扫面会发现端口是关闭状态的。</p>
+<p>设置如上，3306端口就只对本地开放，在外网通过端口扫描会发现端口是关闭状态的。</p>
 ]]></content>
     </entry>
     

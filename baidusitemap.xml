@@ -3,10 +3,9 @@
 
 
     
-    
   <url>
     <loc>https://blog.chenjunwu.cn/2017/06/21/MySQL/</loc>
-    <lastmod>2017-06-22T02:56:08.208Z</lastmod>
+    <lastmod>2017-07-01T03:47:53.207Z</lastmod>
     <data>
         <display>
         <title>MySQL 设置用户可访问数据库</title>
@@ -22,6 +21,7 @@
     </data>
     </url>
 
+    
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/05/22/nginx-compress/</loc>
