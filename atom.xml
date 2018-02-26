@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://blog.chenjunwu.cn/"/>
-  <updated>2017-07-01T03:47:53.207Z</updated>
+  <updated>2018-02-26T03:13:25.163Z</updated>
   <id>https://blog.chenjunwu.cn/</id>
   
   <author>
@@ -14,6 +14,49 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>rsync + lsyncd 文件实时同步</title>
+    <link href="https://blog.chenjunwu.cn/2018/02/26/rsync-lsyncd/"/>
+    <id>https://blog.chenjunwu.cn/2018/02/26/rsync-lsyncd/</id>
+    <published>2018-02-26T02:47:07.000Z</published>
+    <updated>2018-02-26T03:13:25.163Z</updated>
+    
+    <content type="html">&lt;p&gt;使用 rsync + lsyncd 进行远程文件实时同步&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;首先分为&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端（源服务器），需要安装rsync+lsyncd（IP: 119.29.xxx.xx）&lt;/li&gt;
+&lt;li&gt;服务端（目标服务器），需要安装rsync（IP：120.25.xxx.xx）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;服务端配置&quot;&gt;&lt;a href=&quot;#服务端配置&quot; class=&quot;headerlink&quot; title=&quot;服务端配置&quot;&gt;&lt;/a&gt;服务端配置&lt;/h2&gt;&lt;p&gt;安装步骤省略跳过，只配置&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;/etc&lt;/code&gt;下新建文件&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ vim rsyncd.conf&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;输入如下配置&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;41&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;42&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;43&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;44&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# sample rsyncd.conf configuration file&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# GLOBAL OPTIONS&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#motd file=/etc/motd&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;log file=/var/log/rsyncd&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# for pid file, do not use /var/run/rsync.pid if&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# you are going to run rsync out of the init.d script.&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# The init.d script does its own pid file handling,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# so omit the &amp;quot;pid file&amp;quot; line completely in that case.&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; pid file=/var/run/rsyncd.pid&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;syslog facility=daemon&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#socket options=&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# MODULE OPTIONS&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[rsync] #模块名，在客户端设置lsyncd时要对应一致&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	comment = public archive&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	path = /home/ulibao/download/test # 同步的目录&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	use chroot = no&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#	max connections=10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	lock file = /var/lock/rsyncd&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# the default for read only is yes...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	read only = no #设为no，不只是可读&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	list = yes&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	uid = ulibao # 根据同步目录用户和用户组设置&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	gid = ulibao # 根据同步目录用户和用户组设置&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#	exclude = &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#	exclude from = &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#	include =&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#	include from =&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	auth users = ulibao # 同步用户&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	secrets file = /etc/rsyncd.secrets # 同步用户密码&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	strict modes = yes&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	hosts allow = 119.29.xxx.xx # 允许远程服务器IP&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#	hosts deny =&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	ignore errors = yes&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	ignore nonreadable = yes&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	transfer logging = yes&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	log format = %t: host %h (%a) %o %f (%l bytes). Total %b bytes.&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	timeout = 600&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	refuse options = checksum dry-run&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	dont compress = *.gz *.tgz *.zip *.z *.rpm *.deb *.iso *.bz2 *.tbz&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;/etc&lt;/code&gt;下新建密码文件&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ vim rsyncd.secrets&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;密码文件格式&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;ulibao:123456 #用户名:密码&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;启动rsync&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ sudo rsycn --daemon&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&quot;客户端配置&quot;&gt;&lt;a href=&quot;#客户端配置&quot; class=&quot;headerlink&quot; title=&quot;客户端配置&quot;&gt;&lt;/a&gt;客户端配置&lt;/h2&gt;&lt;p&gt;安装步骤省略跳过，只配置&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;/etc&lt;/code&gt;下新建文件&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ vim lsyncd.conf&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;输入以下配置&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;settings &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	logfile =&amp;quot;/root/log/lsyncd/lsyncd.log&amp;quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	statusFile =&amp;quot;/root/log/lsyncd/lsyncd.status&amp;quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	inotifyMode = &amp;quot;CloseWrite&amp;quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	maxProcesses = 8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sync &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	default.rsync, # 默认使用rsync模式配置&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	source = &amp;quot;/root/test/&amp;quot;, # 本机服务器的绝对路径，为检测文件变化的目录&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	target = &amp;quot;ulibao@120.25.xxx.xx::rsync&amp;quot;,  # 目标服务器，`用户名@目标服务器IP::模块`&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	delete = true, # 是否同步删除&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	delay = 2, # 同步延迟&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	rsync = &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		binary = &amp;quot;/usr/bin/rsync&amp;quot;, # rsync 执行文件绝对路径, 以下配置均参考rsync配置&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		archive=true,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		compress=true,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		verbose=true,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		password_file = &amp;quot;/etc/rsyncd.d/rsync.pwd&amp;quot;	 # target中我们指定了同步时用的用户，这里是指定该用户的密码文件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;密码文件&lt;code&gt;/etc/rsyncd.d/rsync.pwd&lt;/code&gt;输入如下&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;123456 # 此为密码&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;启动rsync+lsyncd&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ rsync --daemon&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ lsyncd -log Exec /etc/lsyncd.conf&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;尝试在 119.29.xxx.xx 服务器上 &lt;code&gt;/root/test&lt;/code&gt; 执行&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ echo 12345 &amp;gt; 1.txt&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;在查看 120.25..xxx.xx 服务器上 &lt;code&gt;/home/ulibao/download/test&lt;/code&gt; 是否同步了文件，没有可以通过查看 119.29.xxx.xx 服务器上日志定位问题，刚刚我们配置 &lt;code&gt;lsyncd.conf&lt;/code&gt; 时配置日志路径在 &lt;code&gt;/root/log/lsyncd/lsyncd.log&lt;/code&gt;。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;使用 rsync + lsyncd 进行远程文件实时同步&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+    
+    
+      <category term="Linux" scheme="https://blog.chenjunwu.cn/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>MySQL 设置用户可访问数据库</title>
@@ -70,7 +113,7 @@
     <link href="https://blog.chenjunwu.cn/2017/05/22/nginx-compress/"/>
     <id>https://blog.chenjunwu.cn/2017/05/22/nginx-compress/</id>
     <published>2017-05-22T06:01:18.000Z</published>
-    <updated>2017-06-22T01:59:27.006Z</updated>
+    <updated>2017-06-22T01:59:27.007Z</updated>
     
     <content type="html">&lt;p&gt;nginx 学习记录&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -145,7 +188,7 @@
     <link href="https://blog.chenjunwu.cn/2017/05/06/Request-to-Response5/"/>
     <id>https://blog.chenjunwu.cn/2017/05/06/Request-to-Response5/</id>
     <published>2017-05-06T02:33:48.000Z</published>
-    <updated>2017-05-06T04:49:32.025Z</updated>
+    <updated>2017-05-06T04:49:32.026Z</updated>
     
     <content type="html">&lt;p&gt;Laravel5.1 源码导读系列教程&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -237,7 +280,7 @@
     <link href="https://blog.chenjunwu.cn/2017/05/05/Request-to-Response3/"/>
     <id>https://blog.chenjunwu.cn/2017/05/05/Request-to-Response3/</id>
     <published>2017-05-05T01:35:19.000Z</published>
-    <updated>2017-05-06T03:50:07.381Z</updated>
+    <updated>2017-05-06T03:50:07.382Z</updated>
     
     <content type="html">&lt;p&gt;Laravel5.1 源码导读系列教程&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -284,7 +327,7 @@
     <link href="https://blog.chenjunwu.cn/2017/05/04/Request-to-Response2/"/>
     <id>https://blog.chenjunwu.cn/2017/05/04/Request-to-Response2/</id>
     <published>2017-05-04T08:49:14.000Z</published>
-    <updated>2017-05-06T03:50:07.434Z</updated>
+    <updated>2017-05-06T03:50:07.435Z</updated>
     
     <content type="html">&lt;p&gt;Laravel5.1 源码导读系列教程&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -323,7 +366,7 @@
     <link href="https://blog.chenjunwu.cn/2017/05/04/Request-to-Response1/"/>
     <id>https://blog.chenjunwu.cn/2017/05/04/Request-to-Response1/</id>
     <published>2017-05-04T02:10:45.000Z</published>
-    <updated>2017-05-17T15:10:46.144Z</updated>
+    <updated>2017-05-17T15:10:46.145Z</updated>
     
     <content type="html">&lt;p&gt;Laravel5.1 源码导读系列教程&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -495,7 +538,7 @@
     <link href="https://blog.chenjunwu.cn/2017/05/01/Service-provider/"/>
     <id>https://blog.chenjunwu.cn/2017/05/01/Service-provider/</id>
     <published>2017-05-01T08:23:54.000Z</published>
-    <updated>2017-05-06T03:50:02.677Z</updated>
+    <updated>2017-05-06T03:50:02.678Z</updated>
     
     <content type="html">&lt;p&gt;Laravel5.1 源码导读系列教程&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -535,7 +578,7 @@
     <link href="https://blog.chenjunwu.cn/2017/04/29/env-in-Laravel5-1/"/>
     <id>https://blog.chenjunwu.cn/2017/04/29/env-in-Laravel5-1/</id>
     <published>2017-04-29T02:15:00.000Z</published>
-    <updated>2017-05-06T03:50:01.178Z</updated>
+    <updated>2017-05-06T03:50:01.179Z</updated>
     
     <content type="html">&lt;p&gt;今天我就谈谈Laravel中.env环境变量的实现，在此，我们不会具体讨论框架内核怎么调用具体的API从而实现.env加载到PHP中的$_ENV变量，我们只会关注这个过程怎么实现。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -590,7 +633,7 @@
     <link href="https://blog.chenjunwu.cn/2017/04/08/php-Q-A-2/"/>
     <id>https://blog.chenjunwu.cn/2017/04/08/php-Q-A-2/</id>
     <published>2017-04-08T08:19:10.000Z</published>
-    <updated>2017-04-08T13:31:31.146Z</updated>
+    <updated>2017-04-08T13:31:31.147Z</updated>
     
     <content type="html">&lt;p&gt;此篇博客将讨论PHP中static和self的区别，&lt;a href=&quot;http://php.net/manual/zh/language.oop5.late-static-bindings.php&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PHP文档&lt;/a&gt;有很详细的说明，这里简单描述一下。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -742,7 +785,7 @@
     <link href="https://blog.chenjunwu.cn/2017/03/11/android-learning/"/>
     <id>https://blog.chenjunwu.cn/2017/03/11/android-learning/</id>
     <published>2017-03-11T04:35:00.000Z</published>
-    <updated>2017-03-11T04:37:15.766Z</updated>
+    <updated>2017-03-11T04:37:15.767Z</updated>
     
     <content type="html">&lt;p&gt;最近看着郭婶的《第一行代码 第二版》的书开始学习Android，从头到尾一步一步来敲代码，理解概念，感觉特别适合我这种Android开发小白，理论与实践都有，偏重实践，推荐大家支持郭神的新书，我是在京东买的，特便宜，链接如下：&lt;a href=&quot;https://item.jd.com/11054290852.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://item.jd.com/11054290852.html&lt;/a&gt;&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -853,7 +896,7 @@
     <link href="https://blog.chenjunwu.cn/2016/12/30/summarize2016/"/>
     <id>https://blog.chenjunwu.cn/2016/12/30/summarize2016/</id>
     <published>2016-12-30T10:55:34.000Z</published>
-    <updated>2017-01-12T14:13:10.995Z</updated>
+    <updated>2017-01-12T14:13:10.996Z</updated>
     
     <content type="html">&lt;p&gt;今天是2016年12月30日，离2017年还剩下2天时间，时间飞逝呀！！想当年刚刚进入大学一年级的情况还历历在目，如今已经大三了…&lt;/p&gt;
 &lt;h2 id=&quot;物是人非事事休，欲语泪先流！&quot;&gt;&lt;a href=&quot;#物是人非事事休，欲语泪先流！&quot; class=&quot;headerlink&quot; title=&quot;物是人非事事休，欲语泪先流！&quot;&gt;&lt;/a&gt;物是人非事事休，欲语泪先流！&lt;/h2&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -877,56 +920,6 @@
     
     
       <category term="生活类" scheme="https://blog.chenjunwu.cn/tags/%E7%94%9F%E6%B4%BB%E7%B1%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis安装与使用(一)</title>
-    <link href="https://blog.chenjunwu.cn/2016/09/25/redis/"/>
-    <id>https://blog.chenjunwu.cn/2016/09/25/redis/</id>
-    <published>2016-09-25T08:33:41.000Z</published>
-    <updated>2016-09-25T13:52:15.482Z</updated>
-    
-    <content type="html">&lt;p&gt;Redis是一个key-value存储系统。和Memcached类似，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)、zset(sorted set –有序集合)和hash（哈希类型）。这些数据类型都支持push/pop、add/remove及取交集并集和差集及更丰富的操作，而且这些操作都是原子性的。在此基础上，redis支持各种不同方式的排序。与memcached一样，为了保证效率，数据都是缓存在内存中。区别的是redis会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件，并且在此基础上实现了master-slave(主从)同步……好了不胡乱扯了…&lt;/p&gt;
-&lt;h2 id=&quot;Begin&quot;&gt;&lt;a href=&quot;#Begin&quot; class=&quot;headerlink&quot; title=&quot;Begin!&quot;&gt;&lt;/a&gt;Begin!&lt;/h2&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h2 id=&quot;一、在windows下安装&quot;&gt;&lt;a href=&quot;#一、在windows下安装&quot; class=&quot;headerlink&quot; title=&quot;一、在windows下安装&quot;&gt;&lt;/a&gt;一、在windows下安装&lt;/h2&gt;&lt;p&gt;额…这个就不说了，简单且在github上有说明，&lt;a href=&quot;https://github.com/MSOpenTech/redis&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;传送门&lt;/a&gt;再次，简单介绍就是redis官方不支持windows平台，然后微软的小伙伴就自己搞了一套放在github上开源，拯救了常年活在windows下又想试试redis的小伙伴。&lt;/p&gt;
-&lt;h2 id=&quot;二、在linux下安装&quot;&gt;&lt;a href=&quot;#二、在linux下安装&quot; class=&quot;headerlink&quot; title=&quot;二、在linux下安装&quot;&gt;&lt;/a&gt;二、在linux下安装&lt;/h2&gt;&lt;p&gt;我是直接从官方下载再编译安装的，官方做得好，编译安装并不像其他一样各种依赖没有处理。几条命令就可以了(此时最新版3.2.3)&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ wget http://download.redis.io/releases/redis-3.2.3.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ tar xzf redis-3.2.3.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ cd redis-3.2.3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ make install&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;如果发现自己执行最后一条命令时报错，可能是你并没有安装gcc编译，只要你安装gcc在make一次就可以了，安装gcc也是直接一条命令即可(我的linux是centos7发行版)&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ yum install gcc&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;注意：网上说是执行&lt;code&gt;make&lt;/code&gt;，其实都可以，只是&lt;code&gt;make install&lt;/code&gt;会把redis的执行脚本也安装在&lt;code&gt;/usr/local/bin&lt;/code&gt;目录下，便于我们在全局使用。&lt;/p&gt;
-&lt;p&gt;此时只要我们执行&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ redis-server&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/images/asset/2016/2016-09-25_204748.png&quot; alt=&quot;redis-server效果&quot;&gt;&lt;/p&gt;
-&lt;p&gt;但是这样占据了我们所有的命令行，不方便，这时我们需要让redis运行在后台，需要将redis当作服务来运行。&lt;/p&gt;
-&lt;p&gt;首先我们在解压文件&lt;code&gt;redis-3.2.3&lt;/code&gt;下找到文件夹&lt;code&gt;utils&lt;/code&gt;，找到文件&lt;code&gt;redis_init_script&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/images/asset/2016/2016-09-25_205819.png&quot; alt=&quot;utils/redis_init_script&quot;&gt;&lt;/p&gt;
-&lt;p&gt;将此文件复制到目录&lt;code&gt;/etc/rc.d/init.d/&lt;/code&gt;下，改名为&lt;code&gt;redisd&lt;/code&gt;，此目录下脚本为系统自动执行脚本(能够称为脚本，务必检查有木有头&lt;code&gt;#!/bin/sh&lt;/code&gt;)。&lt;/p&gt;
-&lt;p&gt;注意到上图，保证&lt;code&gt;/usr/local/bin/&lt;/code&gt;存在&lt;code&gt;redis-server&lt;/code&gt;与&lt;code&gt;redis-cli&lt;/code&gt;，&lt;code&gt;/etc/redis/&lt;/code&gt;存在&lt;code&gt;6379.conf&lt;/code&gt;文件(6379.conf即为redis.conf文件，如果&lt;code&gt;/etc/下没有reids目录就自行新建即可&lt;/code&gt;)&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ service redisd start&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;执行后仍然出现redis占满的介绍，此时只要回车即可，那么redis就在后台跑起来了，我们可以检测一下&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ redis-cli&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;&lt;img src=&quot;/images/asset/2016/2016-09-25_211519.png&quot; alt=&quot;redis执行检测&quot;&gt;&lt;/p&gt;
-&lt;p&gt;或者这样检测，检测到6379端口应用即为后台运行的redis服务&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ netstat -an | grep 6379&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/images/asset/2016/2016-09-25_212211.png&quot; alt=&quot;redis执行检测&quot;&gt;&lt;/p&gt;
-&lt;p&gt;此时大工搞成，当然我们新安装的redis是默认不需要认证就可以使用，我们可以修改配置文件(我这里是&lt;code&gt;/etc/redis/6379.conf&lt;/code&gt;文件)&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/images/asset/2016/2016-09-25_212708.png&quot; alt=&quot;6379.conf&quot;&gt;&lt;/p&gt;
-&lt;p&gt;当然，如果你要远程操控redis还必须改&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/images/asset/2016/2016-09-25_212934.png&quot; alt=&quot;redis远程访问&quot;&gt;&lt;/p&gt;
-&lt;p&gt;此时搞好了，别忘了重启redis&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ service redisd stop&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ service redisd start&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;有时会出现无法终止redis，此时可以试试&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ redis-cli -a your_password shutdown # your_password 是你设的密码, 没有就忽略&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ service redisd start&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;最后推荐一款redis图形化管理工具&lt;a href=&quot;https://redisdesktop.com/download&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;RedisDesktopManager&lt;/a&gt;，C++编写，打开效率高，操作简单，跨平台，实力杠杠的。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Redis是一个key-value存储系统。和Memcached类似，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)、zset(sorted set –有序集合)和hash（哈希类型）。这些数据类型都支持push/pop、add/remove及取交集并集和差集及更丰富的操作，而且这些操作都是原子性的。在此基础上，redis支持各种不同方式的排序。与memcached一样，为了保证效率，数据都是缓存在内存中。区别的是redis会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件，并且在此基础上实现了master-slave(主从)同步……好了不胡乱扯了…&lt;/p&gt;
-&lt;h2 id=&quot;Begin&quot;&gt;&lt;a href=&quot;#Begin&quot; class=&quot;headerlink&quot; title=&quot;Begin!&quot;&gt;&lt;/a&gt;Begin!&lt;/h2&gt;
-    
-    </summary>
-    
-      <category term="技术类" scheme="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
-    
-    
-      <category term="服务器端" scheme="https://blog.chenjunwu.cn/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF/"/>
     
   </entry>
   

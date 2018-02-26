@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>https://blog.chenjunwu.cn/2018/02/26/rsync-lsyncd/</loc>
+    <lastmod>2018-02-26T03:13:25.163Z</lastmod>
+    <data>
+        <display>
+        <title>rsync + lsyncd 文件实时同步</title>
+        <pubTime>2018-02-26T02:47:07.000Z</pubTime>
+        
+        <tag>Linux</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术类" url="https://blog.chenjunwu.cn/categories/%E6%8A%80%E6%9C%AF%E7%B1%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://blog.chenjunwu.cn/2017/06/21/MySQL/</loc>
     <lastmod>2017-07-01T03:47:53.207Z</lastmod>
     <data>
@@ -25,7 +45,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/05/22/nginx-compress/</loc>
-    <lastmod>2017-06-22T01:59:27.006Z</lastmod>
+    <lastmod>2017-06-22T01:59:27.007Z</lastmod>
     <data>
         <display>
         <title>nginx静态资源压缩</title>
@@ -66,7 +86,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/05/04/Request-to-Response1/</loc>
-    <lastmod>2017-05-17T15:10:46.144Z</lastmod>
+    <lastmod>2017-05-17T15:10:46.145Z</lastmod>
     <data>
         <display>
         <title>一步步带你理解Laravel请求到响应的生命周期（一）</title>
@@ -132,7 +152,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/05/06/Request-to-Response5/</loc>
-    <lastmod>2017-05-06T04:49:32.025Z</lastmod>
+    <lastmod>2017-05-06T04:49:32.026Z</lastmod>
     <data>
         <display>
         <title>一步步带你理解Laravel请求到响应的生命周期（五）</title>
@@ -176,7 +196,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/05/04/Request-to-Response2/</loc>
-    <lastmod>2017-05-06T03:50:07.434Z</lastmod>
+    <lastmod>2017-05-06T03:50:07.435Z</lastmod>
     <data>
         <display>
         <title>一步步带你理解Laravel请求到响应的生命周期（二）</title>
@@ -198,7 +218,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/05/05/Request-to-Response3/</loc>
-    <lastmod>2017-05-06T03:50:07.381Z</lastmod>
+    <lastmod>2017-05-06T03:50:07.382Z</lastmod>
     <data>
         <display>
         <title>一步步带你理解Laravel请求到响应的生命周期（三）</title>
@@ -220,7 +240,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/05/01/Service-provider/</loc>
-    <lastmod>2017-05-06T03:50:02.677Z</lastmod>
+    <lastmod>2017-05-06T03:50:02.678Z</lastmod>
     <data>
         <display>
         <title>一步步带你实现一个服务提供者</title>
@@ -242,7 +262,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/04/29/env-in-Laravel5-1/</loc>
-    <lastmod>2017-05-06T03:50:01.178Z</lastmod>
+    <lastmod>2017-05-06T03:50:01.179Z</lastmod>
     <data>
         <display>
         <title>.env in Laravel5.1</title>
@@ -285,7 +305,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/04/08/php-Q-A-2/</loc>
-    <lastmod>2017-04-08T13:31:31.146Z</lastmod>
+    <lastmod>2017-04-08T13:31:31.147Z</lastmod>
     <data>
         <display>
         <title>php-Q&A-2</title>
@@ -345,7 +365,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2017/03/11/android-learning/</loc>
-    <lastmod>2017-03-11T04:37:15.766Z</lastmod>
+    <lastmod>2017-03-11T04:37:15.767Z</lastmod>
     <data>
         <display>
         <title>Android学习记录</title>
@@ -386,7 +406,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2016/12/30/summarize2016/</loc>
-    <lastmod>2017-01-12T14:13:10.995Z</lastmod>
+    <lastmod>2017-01-12T14:13:10.996Z</lastmod>
     <data>
         <display>
         <title>2016年总结</title>
@@ -404,7 +424,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2016/09/25/redis/</loc>
-    <lastmod>2016-09-25T13:52:15.482Z</lastmod>
+    <lastmod>2016-09-25T13:52:15.483Z</lastmod>
     <data>
         <display>
         <title>Redis安装与使用(一)</title>
@@ -424,7 +444,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2016/08/10/provider-factory-service%E4%B9%8B%E9%97%B4%E6%AF%94%E8%BE%83/</loc>
-    <lastmod>2016-08-10T11:34:41.061Z</lastmod>
+    <lastmod>2016-08-10T11:34:41.062Z</lastmod>
     <data>
         <display>
         <title>Provider, Factory, Service之间比较</title>
@@ -444,7 +464,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2016/08/08/$watch-$apply-$digest/</loc>
-    <lastmod>2016-08-10T11:31:02.613Z</lastmod>
+    <lastmod>2016-08-10T11:31:02.614Z</lastmod>
     <data>
         <display>
         <title>$watch, $apply, $digest的关系</title>
@@ -484,7 +504,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2016/06/23/java-interface-callback/</loc>
-    <lastmod>2016-08-06T07:40:29.422Z</lastmod>
+    <lastmod>2016-08-06T07:40:29.423Z</lastmod>
     <data>
         <display>
         <title>接口回调</title>
@@ -545,7 +565,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2016/05/11/thinkphp/</loc>
-    <lastmod>2016-06-23T14:06:07.548Z</lastmod>
+    <lastmod>2016-06-23T14:06:07.549Z</lastmod>
     <data>
         <display>
         <title>Thinkphp</title>
@@ -566,7 +586,7 @@
     
   <url>
     <loc>https://blog.chenjunwu.cn/2016/06/06/UEditor/</loc>
-    <lastmod>2016-06-23T02:31:51.153Z</lastmod>
+    <lastmod>2016-06-23T02:31:51.154Z</lastmod>
     <data>
         <display>
         <title>UEditor使用</title>
