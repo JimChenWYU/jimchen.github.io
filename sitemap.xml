@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.chenjunwu.cn/2018/02/26/summarize2017/</loc>
+    
+    <lastmod>2018-03-07T05:56:42.863Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.chenjunwu.cn/2018/02/26/rsync-lsyncd/</loc>
     
     <lastmod>2018-02-26T03:13:25.163Z</lastmod>
